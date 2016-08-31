@@ -13,6 +13,7 @@ var playerID=0;
 var openPlayerOne=true;
 var openPlayerTwo=true;
 var playerName="";
+var canJoin = true;
 
 
 
@@ -23,7 +24,6 @@ readChat();
 
 $(document).on("click", "#joinGame", function(){
 	var playerName = $("#nameBox").val();
-	connectDB(playerName);
 	addUser(playerName);
 
 });
@@ -64,31 +64,32 @@ function getCurrentPlayers(){
 function addUser(name){
 	var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/players");
 
-	if(openPlayerOne  && openPlayerTwo){
-		
-		ref.update({ player1: name});
-		playerID=1;
+	if((openPlayerOne  || openPlayerTwo) && canJoin){
+		if(openPlayerOne  && openPlayerTwo){
+			ref.update({ player1: name});
+			playerID=1;
+		}
 
+		else if(openPlayerOne  && !openPlayerTwo){
+			ref.update({ player1: name});
+			playerID=1;
+		}
+		else if(openPlayerTwo && !openPlayerOne){
+			ref.update({ player2: name});
+			playerID=2;
+		}
+		playerName=name;
+		connectDB(playerName);
+		disconnectDB(playerID);
+		canJoin = false;
 	}
-
-	else if(openPlayerOne  && !openPlayerTwo){
-		
-		ref.update({ player1: name});
-		playerID=1;
-		
-	}
-	else if(openPlayerTwo && !openPlayerOne){
-		
-		ref.update({ player2: name});
-		playerID=2;
-
+	else if(!canJoin && playerID>0){
+		alert("You are already playing");
 	}
 	else{
-		alert("game full");
+		alert("Game Full!");
 	}
 	
-	playerName=name;
-	disconnect(playerID);
 }
 
 
@@ -118,11 +119,12 @@ function readChat(){
 }
 
 
-function disconnect(num){
+function disconnectDB(num){
 
 	var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/players/player"+num);
 	var chat = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/chat");
 	chat.onDisconnect().update({line:playerName+" has Left the game"});
+	chat.onDisconnect().remove();
 	ref.onDisconnect().remove();
 	console.log("remove");
 }
