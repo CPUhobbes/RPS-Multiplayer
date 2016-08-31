@@ -9,28 +9,16 @@ var config = {
 firebase.initializeApp(config);
 
 
-
-// firebase.auth().signInAnonymously().catch(function(error) {
-//   // Handle Errors here.
-//   var errorCode = error.code;
-//   var errorMessage = error.message;
-//   // ...
-// });
+var playerID=0;
+var openPlayerOne=true;
+var openPlayerTwo=true;
+var playerName="";
 
 
-var PLAYER_ID;
 
-
-var playerCount=1;
-var playerObject;
-
-
-// writeUserData("eric");
-// writeUserData("jim");
-
+clearChat();
 getCurrentPlayers();
 readChat();
-
 
 
 $(document).on("click", "#joinGame", function(){
@@ -40,112 +28,121 @@ $(document).on("click", "#joinGame", function(){
 
 });
 
+
+$(document).on("click", "#sendMessage", function(){
+	var message = $("#messageText").val();
+	writeChat(message);
+
+});
+
 function getCurrentPlayers(){
-	var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/players");
-	// var playerCount = firebase.database().ref('players/');
-	// playerCount.on('value', function(snapshot) {
-		ref.on("value", function(snapshot) {
-			var anyPlayers = snapshot.exists();
-			var playerOneBool = snapshot.child("player1").exists();
-			var playerTwoBool = snapshot.child("player2").exists();
-			console.log(anyPlayers);
-			if(anyPlayers){
-				var playerCount = firebase.database().ref('players/');
-				playerCount.on('value', function(snapshotTwo) {
-					playerObject = snapshotTwo.val()
-					if(playerOneBool){
-						$("#playerOneName").html(playerObject.player1);
+	var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/players/");
+	ref.on("value", function(snapshot) {
+		var playerOneBool = snapshot.child("player1").exists();
+		var playerTwoBool = snapshot.child("player2").exists();
+		if(playerOneBool){
+			$("#playerOneName").html(snapshot.val().player1);
+			 openPlayerOne=false;
+		}
+		else{
+			openPlayerOne=true;
+			$("#playerOneName").html("Waiting For Player");
+		}
+		if(playerTwoBool){
+			$("#playerTwoName").html(snapshot.val().player2);
+			openPlayerTwo=false;
+		}
+		else{
+			openPlayerTwo=true;
+			$("#playerTwoName").html("Waiting For Player");
+		}
 
-					}
-					if(playerOneBool){
-						$("#playerTwoName").html(playerObject.player2);
-					}
-
-				});
-
-			}
-		
-		//playerObject = snapshot.val()
-		// var playerOne = playerObject.player1;
-		// var playerTwo = playerObject.player2;
-		
-		//if(playerOne !== null  && playerTwo !== null){
-			//GAME FULL DO SOMETHING
-		//}
-		// //else{
-		// 	if(playerOne !==null){
-		// 		$("#playerOneName").html(playerObject.player1);
-		// 	}
-		// 	if(playerTwo !==null){
-		// 		$("#playerTwoName").html(playerObject.player2);
-		// 	}
-		// //}
-		//console.log(playerOne, playerTwo);
-
-		});
-
-
-
+	});
 }
 
-
-function writeUserData(name) {
-	var sendPlayer = {};
-	sendPlayer["player"+playerCount] = name;
-
-	firebase.database().ref('players/').update(sendPlayer);
-	
-	console.log("test");
-	playerCount+=1;
-}
 
 function addUser(name){
-	console.log(name);
-	writeUserData(name);
+	var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/players");
 
+	if(openPlayerOne  && openPlayerTwo){
+		
+		ref.update({ player1: name});
+		playerID=1;
 
+	}
+
+	else if(openPlayerOne  && !openPlayerTwo){
+		
+		ref.update({ player1: name});
+		playerID=1;
+		
+	}
+	else if(openPlayerTwo && !openPlayerOne){
+		
+		ref.update({ player2: name});
+		playerID=2;
+
+	}
+	else{
+		alert("game full");
+	}
+	
+	playerName=name;
+	disconnect(playerID);
 }
 
 
 function writeChat(chat){
-	firebase.database().ref('chat/').update(chat);
+	var lineObj = {line: chat};
+
+	firebase.database().ref('chat/').update(lineObj);
 
 }
 
 function readChat(){
-	console.log("readChat");
+	var message="";
 	var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/chat");
 	ref.on("value", function(snapshot) {
 		if(snapshot.exists()){
-			console.log("readChat");
-			var chatCount = firebase.database().ref('chat/');
-			chatCount.on('value', function(snapshotTwo) {
-				chatObject = snapshotTwo.val();
-				console.log(Object.keys(chatObject).length);
-				Object.keys(chatObject).forEach(function(key) {
-					console.log(chatObject[key]);
+			console.log("temp");
+	  		console.log(snapshot.val());
+	  		var chatObject = snapshot.val();
 
-
-
-				});
-			});
-		}
+	  		Object.keys(chatObject).forEach(function(key) {
+				console.log("Message:"+chatObject[key]);
+	  			$("#chatBox").append(chatObject[key]+'\n');
+  			});
+  		}
 	});
-
 
 }
 
+
+function disconnect(num){
+
+	var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/players/player"+num);
+	var chat = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/chat");
+	chat.onDisconnect().update({line:playerName+" has Left the game"});
+	ref.onDisconnect().remove();
+	console.log("remove");
+}
+
 function connectDB(name){
+
 	var connectedRef = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/.info/connected");
 	connectedRef.on("value", function(snap) {
-  	if (snap.val() === true) {
-    	$("#chatBox").val(name+" has entered the game");
-  	} 
-  	else {
-    	$("#chatBox").val(name+" has left the game");
-  	}
-});
+	  	if (snap.val() === true) {
+	    	//$("#chatBox").val(name+" has entered the game");
+	    	writeChat(name+" has entered the game");
+	  	} 
+	  	else {
+	    	writeChat(name+" has Left the game");
+	  	}
+	});
 
+}
 
-
+function clearChat(){
+	var chat = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/chat");
+	chat.remove();
 }
