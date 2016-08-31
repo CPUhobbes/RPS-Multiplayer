@@ -18,7 +18,7 @@ var canJoin = true;
 var numWins = 0;
 var numLosses = 0;
 
-
+console.log(playerID);
 
 clearChat();
 getCurrentPlayers();
@@ -178,10 +178,13 @@ function writePlayerDiv(){
 	var scissors = "<div class=\"selection\" data-item=\"scissors\">SCISSORS</div>";
 	tempDiv.append(rock,paper,scissors);
 
-	var tempDiv = $("#player"+playerID+"Score");
-	var score = "<p>Wins:<span id=\"wins"+playerID+"\">"+numWins+"</span>Losses:<span id=\"losses"+playerID+"\">"+numLosses+"</span></p>";
-	tempDiv.append(score);
+	for(var i=1;i<3;++i){
 
+		var tempDiv = $("#player"+i+"Score");
+		var score = "<p>Wins:<span id=\"wins"+i+"\">"+numWins+"</span>Losses:<span id=\"losses"+i+"\">"+numLosses+"</span></p>";
+		tempDiv.append(score);
+	}
+	getScore();
 }
 
 function playerChoice(item){
@@ -232,7 +235,10 @@ function checkResult(){
 				results(0);
 			}  
 		}
+		updateScore();
+		
 	});
+	getScore();
 }
 
 function results(playerNum){
@@ -240,10 +246,6 @@ function results(playerNum){
 	console.log(playerNum, playerID);
 	if(playerNum === playerID){
 		numWins+=1;
-		// alert("win");
-		$("#wins"+playerID).html(numWins);
-		// updateScore(true);
-
 	}
 	else if(playerNum === 0){
 
@@ -251,32 +253,32 @@ function results(playerNum){
 	}
 	else{
 		numLosses+=1;
-		// alert("lose");
-		console.log("loser");
-		$("#losses"+playerID).html(numLosses);
-		// updateScore(false);
-
 	}
-	console.log(numWins, numLosses, "here");
-	clearScore();
+	clearResults();
 }
-function clearScore(){
+function clearResults(){
 	var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player");
 	ref.child("1").child("choice").remove();
 	ref.child("2").child("choice").remove();
 }
 
-// function updateScore(winner){
-// 	var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player");
-// 	var tempRef = ref.child(playerID);
-// 	if(winner){
-// 		tempObj =  {wins: numWins};
-// 		tempRef.update(tempObj);
-// 	}
-// 	else{
-// 		tempObj =  {losses: numLosses};
-// 		tempRef.update(tempObj);
-// 	}
+function updateScore(){
+	if(playerID!==0){
+		var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player");
+		var tempRef = ref.child(playerID);
+		var tempObj =  {wins: numWins};
+		tempRef.update(tempObj);
+		tempObj =  {losses: numLosses};
+		tempRef.update(tempObj);
+	}
+}
 
-
-// }
+function getScore(){
+	var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player");
+	ref.on("value", function(snapshot){
+		$("#losses1").html(snapshot.child("1").child("losses").val());
+		$("#wins1").html(snapshot.child("1").child("wins").val());
+		$("#losses2").html(snapshot.child("2").child("losses").val());
+		$("#wins2").html(snapshot.child("2").child("wins").val());
+	});
+}
