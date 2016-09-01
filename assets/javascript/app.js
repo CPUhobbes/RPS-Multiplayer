@@ -22,14 +22,18 @@ var numLosses = 0;
 var choiceOne;
 var choiceTwo;
 
+var timer;
+
+var scoring = true;
+
 console.log(playerID);
 
 clearChat();
 getCurrentPlayers();
 readChat();
-checkResult();
+
 getChoice();
-//getScore();
+checkResult();
 
 
 
@@ -48,8 +52,7 @@ $(document).on("click", "#sendMessage", function(){
 });
 
 $(document).on("click", ".selection", function(){
-
-	//alert($(this).data("item"));
+	scoring = true;
 	playerChoice($(this).data("item"));
 
 });
@@ -57,11 +60,9 @@ $(document).on("click", ".selection", function(){
 
 
 function getCurrentPlayers(){
-	//var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player/");
 	database.ref().on("value", function(snapshot) {
 		var playerOneBool = snapshot.child("player").child("1").exists();
 		var playerTwoBool = snapshot.child("player").child("2").exists();
-		//console.log(snapshot.val()["1"]);
 		if(playerOneBool){
 			$("#playerOneName").html(snapshot.child("player").val()["1"].name);
 			 openPlayerOne=false;
@@ -84,8 +85,6 @@ function getCurrentPlayers(){
 
 
 function addUser(currentPlayer){
-	//var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player");
-
 	if((openPlayerOne  || openPlayerTwo) && canJoin){
 		if(openPlayerOne  && openPlayerTwo){
 			database.ref().child("player").update({ 1: {
@@ -137,12 +136,10 @@ function writeChat(chat){
 
 function readChat(){
 	var message="";
-	//var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/chat");
 	database.ref().child("chat").on("value", function(snapshot) {
 		if(snapshot.exists()){
 	  		var chatObject = snapshot.val();
 	  		Object.keys(chatObject).forEach(function(key) {
-				//console.log("Message:"+chatObject[key]);
 	  			$("#chatBox").append(chatObject[key]+'\n');
   			});
   		}
@@ -152,32 +149,20 @@ function readChat(){
 
 
 function disconnectDB(num){
-
-	//var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player/"+num);
-	//var chat = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/chat");
 	database.ref().child("chat").onDisconnect().update({line: playerName+" has Left the game"});
-	//chat.onDisconnect().remove();
-	
 	database.ref().child("player/"+num).onDisconnect().remove();
 	
 }
 
 function connectDB(name){
-
-	//var connectedRef = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/.info/connected");
 	database.ref().child(".info/connected").on("value", function(snapshot) {
 	  	if (snapshot.val() === true) {
 	    	writeChat(name+" has entered the game");
 	  	} 
-	  	// else {
-	   //  	writeChat(name+" has Left the game");
-	  	// }
 	});
 }
 
 function clearChat(){
-	//var chat = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/chat");
-	//chat.remove();
 	database.ref().child("chat").remove();
 }
 
@@ -199,25 +184,18 @@ function writePlayerDiv(){
 
 function playerChoice(item){
 	var tempObj =  {choice: item};
-	//var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player");
 	database.ref().child("player").child(playerID).update(tempObj);
-	//var tempRef = ref.child(playerID);
-	//tempObj =  {choice: item};
-	//tempRef.update(tempObj);
 
 }
+
 function checkResult(){
-	//var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player");
-
-
 	database.ref().child("player").on("value", function(snapshot) {
 		var tempBool1 = snapshot.child("1").child("choice").exists();
 		var tempBool2 = snapshot.child("2").child("choice").exists();
-		if(tempBool1  && tempBool2){
-		
+		if(tempBool1  && tempBool2 && scoring){
+			scoring = false;
 			var pOneChoice = snapshot.child("1").child("choice").val();
 			var pTwoChoice = snapshot.child("2").child("choice").val();
-			//getScore();
 			console.log(pOneChoice, pTwoChoice);
 
 			if ((pOneChoice === "rock") && (pTwoChoice === "scissors")){
@@ -227,33 +205,28 @@ function checkResult(){
 				results(2);
 			}
 			else if ((pOneChoice === "scissors") && (pTwoChoice === "rock")){
+
 				results(2);
-			
 			}
 			else if ((pOneChoice === "scissors") && (pTwoChoice === "paper")){
+
 				results(1);
-			
 			}
 			else if ((pOneChoice === "paper") && (pTwoChoice === "rock")){
+
 				results(1);
-			
 			}
 			else if ((pOneChoice === "paper") && (pTwoChoice === "scissors")){
+
 				results(2);
-			
 			}
 			else if (pOneChoice === pTwoChoice){
 				results(0);
-			}  
-			updateScore();
+			}
+			updateScoreDB();  
+			newGameTimer();
 		}
-		
-		getScore();
-	});
-	
-
-	
-	
+	});	
 }
 
 function results(playerNum){
@@ -269,41 +242,28 @@ function results(playerNum){
 	else{
 		numLosses+=1;
 	}
-
-	if(confirm("Play AGAIN?")){
-		
-		clearResults();
-	}
-	
+	newGameTimer();
 
 }
 function clearResults(){
 	$("#player1Choice").html(choiceOne);
 	$("#player2Choice").html(choiceTwo);
 
-	// var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player");
 	database.ref().child("player").child("1").child("choice").remove();
 	database.ref().child("player").child("2").child("choice").remove();
-	// ref.child("1").child("choice").remove();
-	// ref.child("2").child("choice").remove();
 }
 
-function updateScore(){
-	if(playerID!==0){
-		// var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player");
 
-		//var tempRef = ref.child(playerID);
+function updateScoreDB(){
+	if(playerID!==0){
 		var tempObj =  {wins: numWins};
-		//tempRef.update(tempObj);
 		var tempObj2 =  {losses: numLosses};
-		//tempRef.update(tempObj);
 		database.ref().child("player").child(playerID).update(tempObj);
 		database.ref().child("player").child(playerID).update(tempObj2);
 	}
 }
 
 function getScore(){
-	//var ref = new Firebase("https://rps-multiplayer-616fd.firebaseio.com/player");
 	var ref = database.ref().child("player");
 	ref.on("value", function(snapshot){
 		$("#losses1").html(snapshot.child("1").child("losses").val());
@@ -335,4 +295,8 @@ function getChoice(){
 		
 	});
 	
+}
+
+function newGameTimer(){
+	timer = setTimeout(clearResults, 3000);
 }
