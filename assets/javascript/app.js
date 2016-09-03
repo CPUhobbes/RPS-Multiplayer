@@ -1,12 +1,14 @@
 // Initialize Firebase
 
 var config = {
-	apiKey: "AIzaSyD1kC59azlbLde4dl0T-8Z2qdm9ifRCjHo",
-	authDomain: "rps-multiplayer-616fd.firebaseapp.com",
-	databaseURL: "https://rps-multiplayer-616fd.firebaseio.com",
-	storageBucket: "rps-multiplayer-616fd.appspot.com",
-};
-firebase.initializeApp(config);
+    apiKey: "AIzaSyD1kC59azlbLde4dl0T-8Z2qdm9ifRCjHo",
+    authDomain: "rps-multiplayer-616fd.firebaseapp.com",
+    databaseURL: "https://rps-multiplayer-616fd.firebaseio.com",
+    storageBucket: "rps-multiplayer-616fd.appspot.com",
+ };
+ firebase.initializeApp(config);
+
+
 var database = firebase.database();
 
 
@@ -24,17 +26,22 @@ var choiceTwo;
 
 var timer;
 
-var scoring = true;
 
 console.log(playerID);
 
-clearChat();
-getCurrentPlayers();
-readChat();
 
-getChoice();
-checkResult();
 
+
+
+
+$(document).ready(function(){
+
+	clearChat();
+	getCurrentPlayers();
+	readChat();
+	checkResult();
+
+});
 
 
 
@@ -52,7 +59,6 @@ $(document).on("click", "#sendMessage", function(){
 });
 
 $(document).on("click", ".selection", function(){
-	scoring = true;
 	playerChoice($(this).data("item"));
 
 });
@@ -189,14 +195,18 @@ function playerChoice(item){
 }
 
 function checkResult(){
-	database.ref().child("player").on("value", function(snapshot) {
+
+	database.ref().on("child_changed", function(snapshot) {
+
+		console.log(snapshot.val());
+
 		var tempBool1 = snapshot.child("1").child("choice").exists();
 		var tempBool2 = snapshot.child("2").child("choice").exists();
-		if(tempBool1  && tempBool2 && scoring){
-			scoring = false;
+		if(tempBool1  && tempBool2){
 			var pOneChoice = snapshot.child("1").child("choice").val();
 			var pTwoChoice = snapshot.child("2").child("choice").val();
-			console.log(pOneChoice, pTwoChoice);
+			getChoice();
+			clearResults();
 
 			if ((pOneChoice === "rock") && (pTwoChoice === "scissors")){
 				results(1);
@@ -223,15 +233,13 @@ function checkResult(){
 			else if (pOneChoice === pTwoChoice){
 				results(0);
 			}
-			updateScoreDB();  
-			newGameTimer();
 		}
-	});	
+	});
+		
 }
 
 function results(playerNum){
 
-	console.log(playerNum, playerID);
 	if(playerNum === playerID){
 		numWins+=1;
 	}
@@ -242,13 +250,11 @@ function results(playerNum){
 	else{
 		numLosses+=1;
 	}
+	updateScoreDB();
 	newGameTimer();
 
 }
 function clearResults(){
-	$("#player1Choice").html(choiceOne);
-	$("#player2Choice").html(choiceTwo);
-
 	database.ref().child("player").child("1").child("choice").remove();
 	database.ref().child("player").child("2").child("choice").remove();
 }
@@ -276,7 +282,7 @@ function getScore(){
 
 function getChoice(){
 	var ref = database.ref().child("player");
-	ref.on("value", function(snapshot){
+	ref.once("value", function(snapshot){
 		choiceOne = snapshot.child("1").child("choice").val();
 		choiceTwo = snapshot.child("2").child("choice").val()
 		if(choiceTwo!=null){
@@ -294,9 +300,14 @@ function getChoice(){
 		}
 		
 	});
-	
 }
 
 function newGameTimer(){
-	timer = setTimeout(clearResults, 3000);
+	timer = setTimeout(function() {
+		$("#player2Choice").html("");
+		$("#player1Choice").html("");
+
+	}
+
+	, 3000);
 }
