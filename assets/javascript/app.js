@@ -5,10 +5,8 @@ var config = {
     authDomain: "rps-multiplayer-616fd.firebaseapp.com",
     databaseURL: "https://rps-multiplayer-616fd.firebaseio.com",
     storageBucket: "rps-multiplayer-616fd.appspot.com",
- };
- firebase.initializeApp(config);
-
-
+};
+firebase.initializeApp(config);
 var database = firebase.database();
 
 
@@ -27,13 +25,6 @@ var choiceTwo;
 var timer;
 
 
-console.log(playerID);
-
-
-
-
-
-
 $(document).ready(function(){
 
 	clearChat();
@@ -45,9 +36,26 @@ $(document).ready(function(){
 
 
 
-$(document).on("click", "#joinGame", function(){
-	var playerName = $("#nameBox").val();
-	addUser(playerName);
+$(document).on("click", ".nameTextBox", function(){
+	$(this).val("");
+});
+
+
+
+
+$(document).on("click", ".joinButton", function(){
+	var pOneName = $("#playerOneName").val();
+	var pTwoName = $("#playerTwoName").val();
+	var playerDataNum = $(this).data("player");
+
+	if((playerDataNum === 1)  && (pOneName!=="") && (pOneName!==null) && (pOneName!="Enter Name")){
+		addUser(pOneName);
+		console.log($("#playerOneName").val());
+	}
+	else if((playerDataNum === 2)  && (pTwoName!=="") && (pTwoName!==null) && (pTwoName!="Enter Name")){
+		addUser(pTwoName);
+		console.log($("#playerTwoName").val());
+	}
 
 });
 
@@ -117,11 +125,13 @@ function addUser(currentPlayer){
 						}});
 			playerID=2;
 		}
+
+		sitInChair();
 		playerName=currentPlayer;
 		connectDB(playerName);
 		disconnectDB(playerID);
 		canJoin = false;
-		writePlayerDiv();
+
 	}
 	else if(!canJoin && playerID>0){
 		alert("You are already playing");
@@ -198,7 +208,7 @@ function checkResult(){
 
 	database.ref().on("child_changed", function(snapshot) {
 
-		console.log(snapshot.val());
+		//console.log(snapshot.val());
 
 		var tempBool1 = snapshot.child("1").child("choice").exists();
 		var tempBool2 = snapshot.child("2").child("choice").exists();
@@ -267,6 +277,7 @@ function updateScoreDB(){
 		database.ref().child("player").child(playerID).update(tempObj);
 		database.ref().child("player").child(playerID).update(tempObj2);
 	}
+	getScore();
 }
 
 function getScore(){
@@ -276,6 +287,8 @@ function getScore(){
 		$("#wins1").html(snapshot.child("1").child("wins").val());
 		$("#losses2").html(snapshot.child("2").child("losses").val());
 		$("#wins2").html(snapshot.child("2").child("wins").val());
+		console.log($("#losses1").html(snapshot.child("1").child("losses").val()));
+		console.log($("#wins1").html(snapshot.child("1").child("wins").val()));
 	});
 }
 
@@ -310,4 +323,26 @@ function newGameTimer(){
 	}
 
 	, 3000);
+}
+
+
+function sitInChair(){
+
+	$("#imgBlock"+playerID).empty();
+	$("#joinBlock1"+playerID).empty();
+	
+	$("#playerNameBox"+playerID).append("<h2 id=\"playerName"+playerID+"\">"+playerName+"</h2>");
+	var imgDiv = $("#imgBlock"+playerID);
+	var rock = "<img class=\"selection\" data-item=\"rock\" width=\"100\" src=\"./assets/images/rock.png\">";
+	var paper = "<img class=\"selection\" data-item=\"paper\" width=\"100\" src=\"./assets/images/paper.png\">";
+	var scissors = "<img class=\"selection\" data-item=\"scissors\" width=\"100\" src=\"./assets/images/scissors.png\">";
+	imgDiv.append(rock,paper,scissors);
+
+
+	$("#playerScore"+playerID).append("<p>Wins:<span id=\"wins"+playerID+"\">"+numWins+"</span>Losses:<span id=\"losses"+playerID+"\">"+numLosses+"</span></p>");
+
+
+	//getScore();
+
+
 }
