@@ -26,25 +26,19 @@
 
 			<div class="row">
 				<div class="col-md-12 text-center">
-					<input type="textbox" id="nameBox" /><button id="joinGame">Start</button>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md-12 text-center">
 				<!-- Main game boxes -->
 					<div class="row">
 						<div class="col-md-4 text-center">
 							<div class="displayBox">
 								<div id="playerDisplayBox1">
-									<div id="playerNameBox1"></div>
+									<div id="playerNameBox1"><h2>Waiting for Player</h2></div>
 									<div id="imgBlock1">
-										<img src="assets/images/chair.png" alt="A chair" height="200" />
+										<img src="assets/images/chair.png" alt="A chair" height="200" id="leftChair"/>
 									</div>
 									<div id="textBlock1">
 										<div id='playerScore1'></div>
 										<div id="joinBlock1">
-											<input type="text" class="nameTextBox" id="playerOneName" value="Enter Name" size="15" /> 
+											<input type="text" class="nameTextBox" id="playerName1" value="Enter Name" size="15" /> 
 											<button class="joinButton" data-player="1">Join</button>
 										</div>
 									</div>
@@ -60,15 +54,15 @@
 						<div class="col-md-4 text-center">
 							<div class="displayBox">
 								<div id="playerDisplayBox2">
-									<div id="playerName2"></div>
+									<div id="playerNameBox2"><h2>Waiting for Player</h2></div>
 									<div id="imgBlock2">
-										<img src="assets/images/chair.png" alt="A chair" height="200" id="leftChair" />
+										<img src="assets/images/chair.png" alt="A chair" height="200" id="rightChair" />
 									</div>
 
 									<div id="textBlock2">
 										<div id='playerScore2'></div>
 										<div id="joinBlock2">
-											<input type="text" class="nameTextBox" id="playerTwoName" value="Enter Name" size="15" /> 
+											<input type="text" class="nameTextBox" id="playerName2" value="Enter Name" size="15" /> 
 											<button class="joinButton" data-player="2">Join</button>
 										</div>
 									</div>
@@ -105,6 +99,7 @@
 		</div>
 
 		<!-- JavaScript -->
+
 		<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-app.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-database.js"></script>

@@ -44,17 +44,15 @@ $(document).on("click", ".nameTextBox", function(){
 
 
 $(document).on("click", ".joinButton", function(){
-	var pOneName = $("#playerOneName").val();
-	var pTwoName = $("#playerTwoName").val();
+	var pOneName = $("#playerName1").val();
+	var pTwoName = $("#playerName2").val();
 	var playerDataNum = $(this).data("player");
 
 	if((playerDataNum === 1)  && (pOneName!=="") && (pOneName!==null) && (pOneName!="Enter Name")){
-		addUser(pOneName);
-		console.log($("#playerOneName").val());
+		addUser(pOneName, playerDataNum);
 	}
 	else if((playerDataNum === 2)  && (pTwoName!=="") && (pTwoName!==null) && (pTwoName!="Enter Name")){
-		addUser(pTwoName);
-		console.log($("#playerTwoName").val());
+		addUser(pTwoName, playerDataNum);
 	}
 
 });
@@ -67,46 +65,105 @@ $(document).on("click", "#sendMessage", function(){
 });
 
 $(document).on("click", ".selection", function(){
-	playerChoice($(this).data("item"));
+	var itemChoice = $(this).data("item");
+	$("#imgBlock"+playerID).empty();
+	$("#imgBlock"+playerID).append("<img class=\"selection\" data-item=\""+itemChoice+"\" width=\"100\" src=\"./assets/images/"+itemChoice+".png\">");
+	playerChoice(itemChoice);
 
 });
 
 
 
 function getCurrentPlayers(){
-	database.ref().on("value", function(snapshot) {
-		var playerOneBool = snapshot.child("player").child("1").exists();
-		var playerTwoBool = snapshot.child("player").child("2").exists();
-		if(playerOneBool){
-			$("#playerOneName").html(snapshot.child("player").val()["1"].name);
-			 openPlayerOne=false;
-		}
-		else{
-			openPlayerOne=true;
-			$("#playerOneName").html("Waiting For Player");
-		}
-		if(playerTwoBool){
-			$("#playerTwoName").html(snapshot.child("player").val()["2"].name);
-			openPlayerTwo=false;
-		}
-		else{
-			openPlayerTwo=true;
-			$("#playerTwoName").html("Waiting For Player");
-		}
+
+
+	database.ref().child("player").on("child_added", function(snapshot) {
+
+		//console.log(snapshot.val());
+		 if(snapshot.val().seat === 1){
+			$("#playerNameBox1").html(snapshot.val().name);
+			$("#imgBlock1").empty();
+		 	$("#imgBlock1").append("<img src=\"assets/images/arnold.png\" alt=\"A chair\" height=\"200\" id=\"leftChair\"/>");
+			//$("#playerScore1").empty();
+			$("#playerScore1").append("<p>Wins:<span id=\"wins1\">"+numWins+"</span>Losses:<span id=\"losses1\">"+numLosses+"</span></p>");
+			$("#joinBlock1").empty();
+		 	 openPlayerOne=false;
+
+		 }
+		 else if(snapshot.val().seat === 2){
+			$("#playerNameBox2").html(snapshot.val().name);
+			$("#imgBlock2").empty();
+		 	$("#imgBlock2").append("<img src=\"assets/images/theRock.png\" alt=\"A chair\" height=\"200\" id=\"rightChair\"/>");
+			//$("#playerScore1").empty();
+			$("#playerScore2").append("<p>Wins:<span id=\"wins2\">"+numWins+"</span>Losses:<span id=\"losses2\">"+numLosses+"</span></p>");
+			$("#joinBlock2").empty();
+		 	 openPlayerTwo=false;
+		 	 // console.log("p2");
+		 }
 
 	});
+
+	database.ref().child("player").on("child_removed", function(snapshot) {
+
+		var seatNum = snapshot.val().seat;
+
+		// console.log(snapshot.val());
+		 if(seatNum === 1){
+			// $("#playerNameBox1").html(snapshot.val().name);
+			$("#leftChair").attr("src", "assets/images/chair.png");
+			// //$("#playerScore1").empty();
+			// $("#playerScore1").append("<p>Wins:<span id=\"wins1\">"+numWins+"</span>Losses:<span id=\"losses1\">"+numLosses+"</span></p>");
+			// $("#joinBlock1").empty();
+		 // 	 openPlayerOne=false;
+		 	$("#imgBlock1").empty();
+		 	$("#imgBlock1").append("<img src=\"assets/images/chair.png\" alt=\"A chair\" height=\"200\" id=\"leftChair\"/>");
+		 	leaveChair(seatNum);
+		 	console.log("p11");
+
+
+
+		 }
+		 else if(seatNum === 2){
+			// $("#playerNameBox2").html(snapshot.val().name);
+			$("#rightChair").attr("src", "assets/images/chair.png");
+			// //$("#playerScore1").empty();
+			// $("#playerScore2").append("<p>Wins:<span id=\"wins2\">"+numWins+"</span>Losses:<span id=\"losses2\">"+numLosses+"</span></p>");
+			// $("#joinBlock2").empty();
+		 // 	 openPlayerTwo=false;
+		 // 	 console.log("p2");
+		 $("#imgBlock2").empty();
+		 $("#imgBlock2").append("<img src=\"assets/images/chair.png\" alt=\"A chair\" height=\"200\" id=\"rightChair\"/>");
+		 console.log("p12");
+		 leaveChair(seatNum);
+		 }
+
+	});
+
+
+
 }
 
 
-function addUser(currentPlayer){
+function addUser(currentPlayer, seatNum){
+
 	if((openPlayerOne  || openPlayerTwo) && canJoin){
-		if(openPlayerOne  && openPlayerTwo){
+		if(openPlayerOne  && openPlayerTwo && seatNum ===1){
 			database.ref().child("player").update({ 1: {
 							name: currentPlayer,
 							wins: 0,
 							losses: 0,
+							seat:1
 						}});
 			playerID=1;
+		}
+		else if(openPlayerOne  && openPlayerTwo && seatNum ===2){
+			database.ref().child("player").update({ 2: {
+							name: currentPlayer,
+							wins: 0,
+							losses: 0,
+							seat:2
+						}});
+			playerID=2;
 		}
 
 		else if(openPlayerOne  && !openPlayerTwo){
@@ -114,6 +171,7 @@ function addUser(currentPlayer){
 							name: currentPlayer,
 							wins: 0,
 							losses: 0,
+							seat:1
 						}});
 			playerID=1;
 		}
@@ -122,6 +180,7 @@ function addUser(currentPlayer){
 							name: currentPlayer,
 							wins: 0,
 							losses: 0,
+							seat:2
 						}});
 			playerID=2;
 		}
@@ -152,12 +211,12 @@ function writeChat(chat){
 
 function readChat(){
 	var message="";
-	database.ref().child("chat").on("value", function(snapshot) {
-		if(snapshot.exists()){
+	database.ref().child("chat").on("child_changed", function(snapshot) {
+	if(snapshot.exists()){
 	  		var chatObject = snapshot.val();
-	  		Object.keys(chatObject).forEach(function(key) {
-	  			$("#chatBox").append(chatObject[key]+'\n');
-  			});
+	  		if(chatObject !==""){
+	  			$("#chatBox").append(chatObject+'\n');
+	  		}
   		}
 	});
 
@@ -166,7 +225,7 @@ function readChat(){
 
 function disconnectDB(num){
 	database.ref().child("chat").onDisconnect().update({line: playerName+" has Left the game"});
-	database.ref().child("player/"+num).onDisconnect().remove();
+	database.ref().child("player").child(playerID).onDisconnect().remove();
 	
 }
 
@@ -179,15 +238,10 @@ function connectDB(name){
 }
 
 function clearChat(){
-	database.ref().child("chat").remove();
+	database.ref().child("chat").set({line:""});
 }
 
 function writePlayerDiv(){
-	var tempDiv = $("#player"+playerID+"Items");
-	var rock = "<div class=\"selection\" data-item=\"rock\">ROCK</div>";
-	var paper = "<div class=\"selection\"  data-item=\"paper\">PAPER</div>";
-	var scissors = "<div class=\"selection\" data-item=\"scissors\">SCISSORS</div>";
-	tempDiv.append(rock,paper,scissors);
 
 	for(var i=1;i<3;++i){
 
@@ -195,7 +249,6 @@ function writePlayerDiv(){
 		var score = "<p>Wins:<span id=\"wins"+i+"\">"+numWins+"</span>Losses:<span id=\"losses"+i+"\">"+numLosses+"</span></p>";
 		tempDiv.append(score);
 	}
-	getScore();
 }
 
 function playerChoice(item){
@@ -319,6 +372,7 @@ function newGameTimer(){
 	timer = setTimeout(function() {
 		$("#player2Choice").html("");
 		$("#player1Choice").html("");
+		showWeapons();
 
 	}
 
@@ -329,20 +383,44 @@ function newGameTimer(){
 function sitInChair(){
 
 	$("#imgBlock"+playerID).empty();
-	$("#joinBlock1"+playerID).empty();
+	$("#joinBlock"+playerID).empty();
 	
-	$("#playerNameBox"+playerID).append("<h2 id=\"playerName"+playerID+"\">"+playerName+"</h2>");
+	// $("#playerNameBox"+playerID).append("<h2 id=\"playerName"+playerID+"\">"+playerName+"</h2>");
+	// var imgDiv = $("#imgBlock"+playerID);
+	// var rock = "<img class=\"selection\" data-item=\"rock\" width=\"100\" src=\"./assets/images/rock.png\">";
+	// var paper = "<img class=\"selection\" data-item=\"paper\" width=\"100\" src=\"./assets/images/paper.png\">";
+	// var scissors = "<img class=\"selection\" data-item=\"scissors\" width=\"100\" src=\"./assets/images/scissors.png\">";
+	// imgDiv.append(rock,paper,scissors);
+	//$("#playerScore"+playerID).append("<p>Wins:<span id=\"wins"+playerID+"\">"+numWins+"</span>Losses:<span id=\"losses"+playerID+"\">"+numLosses+"</span></p>");
+	//getScore();
+	showWeapons();
+
+}
+
+function leaveChair(seatNum){
+	if(playerID===0){
+		$("#joinBlock"+seatNum).append("<input type=\"text\" class=\"nameTextBox\" id=\"playerName"+seatNum+"\" value=\"Enter Name\" size=\"15\" />"+ 
+										"<button class=\"joinButton\" data-player=\""+seatNum+"\">Join</button>");
+	}
+	$("#playerScore"+seatNum).empty();
+	$("#playerNameBox"+seatNum).empty();
+	$("#playerNameBox"+seatNum).append("<h2>Waiting for Player</h2>");
+	if(seatNum===1){
+		openPlayerOne=true;
+	}
+	else{
+		openPlayerTwo=true;
+	}
+}
+function showWeapons(){
+
+	$("#imgBlock"+playerID).empty();
 	var imgDiv = $("#imgBlock"+playerID);
 	var rock = "<img class=\"selection\" data-item=\"rock\" width=\"100\" src=\"./assets/images/rock.png\">";
 	var paper = "<img class=\"selection\" data-item=\"paper\" width=\"100\" src=\"./assets/images/paper.png\">";
 	var scissors = "<img class=\"selection\" data-item=\"scissors\" width=\"100\" src=\"./assets/images/scissors.png\">";
 	imgDiv.append(rock,paper,scissors);
 
-
-	$("#playerScore"+playerID).append("<p>Wins:<span id=\"wins"+playerID+"\">"+numWins+"</span>Losses:<span id=\"losses"+playerID+"\">"+numLosses+"</span></p>");
-
-
-	//getScore();
 
 
 }

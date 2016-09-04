@@ -8,11 +8,11 @@ p{
 }
 .displayBox{
 
-	height: 300px;
+	height: 350px;
 	border: 5px solid red;
 }
 
-#leftChair{
+#rightChair{
 	-moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
