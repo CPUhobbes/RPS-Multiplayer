@@ -31,6 +31,7 @@ $(document).ready(function(){
 	getCurrentPlayers();
 	readChat();
 	checkResult();
+	getScore();
 
 });
 
@@ -79,70 +80,46 @@ function getCurrentPlayers(){
 
 	database.ref().child("player").on("child_added", function(snapshot) {
 
-		//console.log(snapshot.val());
 		 if(snapshot.val().seat === 1){
-			$("#playerNameBox1").html(snapshot.val().name);
+		 	$("#playerNameBox1").empty();
+			$("#playerNameBox1").append("<h2>"+snapshot.val().name+"</h2>");
 			$("#imgBlock1").empty();
 		 	$("#imgBlock1").append("<img src=\"assets/images/arnold.png\" alt=\"A chair\" height=\"200\" id=\"leftChair\"/>");
-			//$("#playerScore1").empty();
 			$("#playerScore1").append("<p>Wins:<span id=\"wins1\">"+numWins+"</span>Losses:<span id=\"losses1\">"+numLosses+"</span></p>");
 			$("#joinBlock1").empty();
 		 	 openPlayerOne=false;
-
 		 }
+
 		 else if(snapshot.val().seat === 2){
-			$("#playerNameBox2").html(snapshot.val().name);
+		 	$("#playerNameBox2").empty();
+			$("#playerNameBox2").append("<h2>"+snapshot.val().name+"</h2>");
 			$("#imgBlock2").empty();
 		 	$("#imgBlock2").append("<img src=\"assets/images/theRock.png\" alt=\"A chair\" height=\"200\" id=\"rightChair\"/>");
-			//$("#playerScore1").empty();
 			$("#playerScore2").append("<p>Wins:<span id=\"wins2\">"+numWins+"</span>Losses:<span id=\"losses2\">"+numLosses+"</span></p>");
 			$("#joinBlock2").empty();
 		 	 openPlayerTwo=false;
-		 	 // console.log("p2");
 		 }
-
 	});
 
 	database.ref().child("player").on("child_removed", function(snapshot) {
 
 		var seatNum = snapshot.val().seat;
 
-		// console.log(snapshot.val());
 		 if(seatNum === 1){
-			// $("#playerNameBox1").html(snapshot.val().name);
 			$("#leftChair").attr("src", "assets/images/chair.png");
-			// //$("#playerScore1").empty();
-			// $("#playerScore1").append("<p>Wins:<span id=\"wins1\">"+numWins+"</span>Losses:<span id=\"losses1\">"+numLosses+"</span></p>");
-			// $("#joinBlock1").empty();
-		 // 	 openPlayerOne=false;
 		 	$("#imgBlock1").empty();
 		 	$("#imgBlock1").append("<img src=\"assets/images/chair.png\" alt=\"A chair\" height=\"200\" id=\"leftChair\"/>");
 		 	leaveChair(seatNum);
-		 	console.log("p11");
-
-
-
 		 }
+
 		 else if(seatNum === 2){
-			// $("#playerNameBox2").html(snapshot.val().name);
 			$("#rightChair").attr("src", "assets/images/chair.png");
-			// //$("#playerScore1").empty();
-			// $("#playerScore2").append("<p>Wins:<span id=\"wins2\">"+numWins+"</span>Losses:<span id=\"losses2\">"+numLosses+"</span></p>");
-			// $("#joinBlock2").empty();
-		 // 	 openPlayerTwo=false;
-		 // 	 console.log("p2");
-		 $("#imgBlock2").empty();
-		 $("#imgBlock2").append("<img src=\"assets/images/chair.png\" alt=\"A chair\" height=\"200\" id=\"rightChair\"/>");
-		 console.log("p12");
-		 leaveChair(seatNum);
+		 	$("#imgBlock2").empty();
+		 	$("#imgBlock2").append("<img src=\"assets/images/chair.png\" alt=\"A chair\" height=\"200\" id=\"rightChair\"/>");
+		 	leaveChair(seatNum);
 		 }
-
 	});
-
-
-
 }
-
 
 function addUser(currentPlayer, seatNum){
 
@@ -156,6 +133,7 @@ function addUser(currentPlayer, seatNum){
 						}});
 			playerID=1;
 		}
+
 		else if(openPlayerOne  && openPlayerTwo && seatNum ===2){
 			database.ref().child("player").update({ 2: {
 							name: currentPlayer,
@@ -175,6 +153,7 @@ function addUser(currentPlayer, seatNum){
 						}});
 			playerID=1;
 		}
+
 		else if(openPlayerTwo && !openPlayerOne){
 			database.ref().child("player").update({ 2: {
 							name: currentPlayer,
@@ -192,9 +171,11 @@ function addUser(currentPlayer, seatNum){
 		canJoin = false;
 
 	}
+
 	else if(!canJoin && playerID>0){
 		alert("You are already playing");
 	}
+
 	else{
 		alert("Game Full!");
 	}
@@ -212,8 +193,10 @@ function writeChat(chat){
 function readChat(){
 	var message="";
 	database.ref().child("chat").on("child_changed", function(snapshot) {
+
 	if(snapshot.exists()){
 	  		var chatObject = snapshot.val();
+
 	  		if(chatObject !==""){
 	  			$("#chatBox").append(chatObject+'\n');
 	  		}
@@ -224,15 +207,14 @@ function readChat(){
 
 
 function disconnectDB(num){
-	database.ref().child("chat").onDisconnect().update({line: playerName+" has Left the game"});
+	database.ref().child("chat").onDisconnect().update({line: playerName+" has left the game!"});
 	database.ref().child("player").child(playerID).onDisconnect().remove();
-	
 }
 
 function connectDB(name){
-	database.ref().child(".info/connected").on("value", function(snapshot) {
+	database.ref().child(".info").on("child_added", function(snapshot) {
 	  	if (snapshot.val() === true) {
-	    	writeChat(name+" has entered the game");
+	    	writeChat(name+" has entered the game!");
 	  	} 
 	});
 }
@@ -244,7 +226,6 @@ function clearChat(){
 function writePlayerDiv(){
 
 	for(var i=1;i<3;++i){
-
 		var tempDiv = $("#player"+i+"Score");
 		var score = "<p>Wins:<span id=\"wins"+i+"\">"+numWins+"</span>Losses:<span id=\"losses"+i+"\">"+numLosses+"</span></p>";
 		tempDiv.append(score);
@@ -261,39 +242,67 @@ function checkResult(){
 
 	database.ref().on("child_changed", function(snapshot) {
 
-		//console.log(snapshot.val());
-
+		// console.log(snapshot.val());
 		var tempBool1 = snapshot.child("1").child("choice").exists();
 		var tempBool2 = snapshot.child("2").child("choice").exists();
+
 		if(tempBool1  && tempBool2){
 			var pOneChoice = snapshot.child("1").child("choice").val();
 			var pTwoChoice = snapshot.child("2").child("choice").val();
-			getChoice();
 			clearResults();
 
 			if ((pOneChoice === "rock") && (pTwoChoice === "scissors")){
+				$("#player1Choice").append("<img src=\"assets/images/left_R.gif\" alt=\"rock\" width=\"100\"/>");
+				$("#player2Choice").append("<img src=\"assets/images/right_S.gif\" alt=\"scissors\" width=\"100\"/>");
+				$("#result").append("<h3>Player 1 Wins!</h3>");
 				results(1);
 			}
 			else if ((pOneChoice === "rock") && (pTwoChoice === "paper")){
+				$("#player1Choice").append("<img src=\"assets/images/left_R.gif\" alt=\"rock\" width=\"100\"/>");
+				$("#player2Choice").append("<img src=\"assets/images/right_P.gif\" alt=\"paper\" width=\"100\"/>");
+				$("#result").append("<h3>Player 2 Wins!</h3>");
 				results(2);
 			}
 			else if ((pOneChoice === "scissors") && (pTwoChoice === "rock")){
-
+				$("#player1Choice").append("<img src=\"assets/images/left_S.gif\" alt=\"scissors\" width=\"100\"/>");
+				$("#player2Choice").append("<img src=\"assets/images/right_R.gif\" alt=\"rock\" width=\"100\"/>");
+				$("#result").append("<h3>Player 2 Wins!</h3>");
 				results(2);
 			}
 			else if ((pOneChoice === "scissors") && (pTwoChoice === "paper")){
-
+				$("#player1Choice").append("<img src=\"assets/images/left_S.gif\" alt=\"scissors\" width=\"100\"/>");
+				$("#player2Choice").append("<img src=\"assets/images/right_P.gif\" alt=\"paper\" width=\"100\"/>");
+				$("#result").append("<h3>Player 1 Wins!</h3>");
 				results(1);
 			}
 			else if ((pOneChoice === "paper") && (pTwoChoice === "rock")){
-
+				$("#player1Choice").append("<img src=\"assets/images/left_P.gif\" alt=\"paper\" width=\"100\"/>");
+				$("#player2Choice").append("<img src=\"assets/images/right_R.gif\" alt=\"rock\" width=\"100\"/>");
+				$("#result").append("<h3>Player 1 Wins!</h3>");
 				results(1);
 			}
 			else if ((pOneChoice === "paper") && (pTwoChoice === "scissors")){
-
+				$("#player1Choice").append("<img src=\"assets/images/left_P.gif\" alt=\"paper\" width=\"100\"/>");
+				$("#player2Choice").append("<img src=\"assets/images/right_S.gif\" alt=\"scissors\" width=\"100\"/>");
+				$("#result").append("<h3>Player 2 Wins!</h3>");
 				results(2);
 			}
-			else if (pOneChoice === pTwoChoice){
+			else if ((pOneChoice === pTwoChoice) && (pTwoChoice === "paper")){
+				$("#player1Choice").append("<img src=\"assets/images/left_P.gif\" alt=\"paper\" width=\"100\"/>");
+				$("#player2Choice").append("<img src=\"assets/images/right_P.gif\" alt=\"paper\" width=\"100\"/>");
+				$("#result").append("<h3>Its a Tie!</h3>");
+				results(0);
+			}
+			else if ((pOneChoice === pTwoChoice) && (pTwoChoice === "scissors")){
+				$("#player1Choice").append("<img src=\"assets/images/left_S.gif\" alt=\"scissors\" width=\"100\"/>");
+				$("#player2Choice").append("<img src=\"assets/images/right_S.gif\" alt=\"scissors\" width=\"100\"/>");
+				$("#result").append("<h3>Its a Tie!</h3>");
+				results(0);
+			}
+			else if ((pOneChoice === pTwoChoice) && (pTwoChoice === "rock")){
+				$("#player1Choice").append("<img src=\"assets/images/left_R.gif\" alt=\"rock\" width=\"100\"/>");
+				$("#player2Choice").append("<img src=\"assets/images/right_R.gif\" alt=\"rock\" width=\"100\"/>");
+				$("#result").append("<h3>Its a Tie!</h3>");
 				results(0);
 			}
 		}
@@ -306,13 +315,13 @@ function results(playerNum){
 	if(playerNum === playerID){
 		numWins+=1;
 	}
-	else if(playerNum === 0){
+	else if((playerNum !== 0) && (playerNum !== playerID )){
 
-		alert("tie");
-	}
-	else{
 		numLosses+=1;
 	}
+	// else{ //TIE
+		
+	// }
 	updateScoreDB();
 	newGameTimer();
 
@@ -330,69 +339,39 @@ function updateScoreDB(){
 		database.ref().child("player").child(playerID).update(tempObj);
 		database.ref().child("player").child(playerID).update(tempObj2);
 	}
-	getScore();
+
+	
 }
 
 function getScore(){
-	var ref = database.ref().child("player");
-	ref.on("value", function(snapshot){
-		$("#losses1").html(snapshot.child("1").child("losses").val());
-		$("#wins1").html(snapshot.child("1").child("wins").val());
-		$("#losses2").html(snapshot.child("2").child("losses").val());
-		$("#wins2").html(snapshot.child("2").child("wins").val());
-		console.log($("#losses1").html(snapshot.child("1").child("losses").val()));
-		console.log($("#wins1").html(snapshot.child("1").child("wins").val()));
-	});
-}
 
-
-function getChoice(){
-	var ref = database.ref().child("player");
-	ref.once("value", function(snapshot){
-		choiceOne = snapshot.child("1").child("choice").val();
-		choiceTwo = snapshot.child("2").child("choice").val()
-		if(choiceTwo!=null){
-			$("#player2Choice").html("Player 2: "+choiceTwo);
+	database.ref().child("player").on("child_changed", function(snapshot) {
+		if(snapshot.val().seat === 1){
+			$("#losses1").html(snapshot.val().losses);
+			$("#wins1").html(snapshot.val().wins);
 		}
-		else{
-			$("#player2Choice").html("");
+		else if (snapshot.val().seat === 2){
+			$("#losses2").html(snapshot.val().losses);
+			$("#wins2").html(snapshot.val().wins);
 		}
-		if(choiceOne!=null){
-			$("#player1Choice").html("Player 1: "+choiceOne);
-		}
-		else{
-			$("#player1Choice").html("");
-
-		}
-		
 	});
 }
 
 function newGameTimer(){
 	timer = setTimeout(function() {
-		$("#player2Choice").html("");
-		$("#player1Choice").html("");
+		$("#player2Choice").empty();
+		$("#player1Choice").empty();
+		$("#result").empty();
 		showWeapons();
-
 	}
-
-	, 3000);
+	, 4000);
 }
-
 
 function sitInChair(){
 
 	$("#imgBlock"+playerID).empty();
-	$("#joinBlock"+playerID).empty();
-	
-	// $("#playerNameBox"+playerID).append("<h2 id=\"playerName"+playerID+"\">"+playerName+"</h2>");
-	// var imgDiv = $("#imgBlock"+playerID);
-	// var rock = "<img class=\"selection\" data-item=\"rock\" width=\"100\" src=\"./assets/images/rock.png\">";
-	// var paper = "<img class=\"selection\" data-item=\"paper\" width=\"100\" src=\"./assets/images/paper.png\">";
-	// var scissors = "<img class=\"selection\" data-item=\"scissors\" width=\"100\" src=\"./assets/images/scissors.png\">";
-	// imgDiv.append(rock,paper,scissors);
-	//$("#playerScore"+playerID).append("<p>Wins:<span id=\"wins"+playerID+"\">"+numWins+"</span>Losses:<span id=\"losses"+playerID+"\">"+numLosses+"</span></p>");
-	//getScore();
+	$("#joinBlock1").empty();
+	$("#joinBlock2").empty();
 	showWeapons();
 
 }
@@ -412,6 +391,7 @@ function leaveChair(seatNum){
 		openPlayerTwo=true;
 	}
 }
+
 function showWeapons(){
 
 	$("#imgBlock"+playerID).empty();
@@ -420,7 +400,5 @@ function showWeapons(){
 	var paper = "<img class=\"selection\" data-item=\"paper\" width=\"100\" src=\"./assets/images/paper.png\">";
 	var scissors = "<img class=\"selection\" data-item=\"scissors\" width=\"100\" src=\"./assets/images/scissors.png\">";
 	imgDiv.append(rock,paper,scissors);
-
-
 
 }
