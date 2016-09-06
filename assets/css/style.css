@@ -1,20 +1,162 @@
 body{
-	/*color: #ffffff;
-	background-color: #000000;*/
+    background-color: #000000;
+    color:#000000;
+    font-family: 'Metal Mania', cursive;
 
 }
-p{
-
+h1, p{
+	font-family: 'Metal Mania', cursive;
+	color: #EFEF00;
 }
-.displayBox{
-
-	height: 350px;
-	border: 5px solid red;
+.noVertAlign{
+	    vertical-align: top;
 }
 
-#rightChair{
-	-moz-transform: scaleX(-1);
+
+.mainBox{
+	background-image: url("../images/ts_bg.jpg");
+	background-position: top center;
+	background-repeat: no-repeat;
+	height:768px;
+}
+
+#rightChar{
+    position: absolute;
+    right: 80px;
+    top: 450px;
+    -moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
 }
+
+
+#leftChar {
+    position: absolute;
+    left: 80px;
+    top: 450px;
+}
+
+#chatBox{
+    width:400px;
+    height: 150px;
+    background-color: rgba(0,0,0,.6);
+    resize: none;
+    color: #EFEF00;
+    font-size: 16px;
+}
+#chatArea{
+	position: absolute;
+    left: 50%;
+    top: 550px;
+    margin-left: -200px;
+
+}
+#messageText{
+	width: 315px;
+	background-color: rgba(0,0,0,.6);
+	color: #EFEF00;
+	margin-right: 10px;
+	font-size: 18px;
+
+}
+#sendMessage{
+	width:75px;
+	background-color: rgba(0,0,0,.6);
+	color: #CD0004;
+	font-size: 18px;
+}
+
+
+.nameBox{
+	
+	font-size: 48px;
+	background-color: #009B00;
+	width: 400px;
+	border: solid 2px #EFEF00;
+	position: relative;
+}
+
+.nameText{
+	margin: 0;
+	padding: 0px 15px;
+	position: relative;
+	z-index: 1;
+}
+
+
+#playerHealth1{
+	height: 100%;
+	width: 0%;
+	right:0;
+	
+
+}
+#playerHealth2{
+	height: 100%;
+	width: 0%;
+	left: 0;
+}
+
+.playerHealthBar{
+	background-color: #BF0002;
+	margin: 0;
+	position: absolute;
+	top:0;
+    z-index: 0;
+}
+.floatRight{
+	float: right;
+}
+.floatLeft{
+	float: left;
+}
+.fightersPortrait{
+	width: 100px;
+	padding: 5px;
+
+}
+.dummyPortrait{
+	width: 100px;
+	padding: 5px;
+	
+}
+.fightersPortrait:hover{
+	background-color: #00cc00;
+}
+
+
+.modalBGColor{
+	background-color: #6B6B6D;
+
+}
+#modalButtonText{
+	font-size: 20px;
+}
+#playerNameTextbox{
+	font-size: 24px;
+	padding: 5px;
+	color: #EF0000;
+	text-align: center;
+	margin-bottom:10px; 
+
+}
+.weaponHolder{
+	display: none;
+	width:100px;
+	height:300px;
+	background-color: rgba(105,0,0,.8);
+	line-height: 100px;
+
+
+}
+.weaponImage{
+
+	vertical-align: middle;
+}
+.score{
+	margin-top: -25px;
+	font-size: 32px;
+	color: #EFEF00;
+}
+

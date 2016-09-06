@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>RPS Multiplayer Game</title>
+
+		<meta charset="UTF-8"> 
+
+		 <!-- CSS -->
+		<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+		<!-- Mobile Tag -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	</head>
+
+
+	<body>
+		<div class="mainBox">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 text-center ">
+						<h2>Rock Paper Scissors MMO</h2>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12 text-center">
+					<!-- Main game boxes -->
+						<div class="row">
+							<div class="col-md-4 text-center">
+								<div class="displayBox">
+									<div id="playerDisplayBox1">
+										<div id="playerNameBox1"><h2>Waiting for Player</h2></div>
+										<div id="imgBlock1">
+											<img src="assets/images/chair.png" alt="A chair" height="200" id="leftChair"/>
+										</div>
+										<div id="textBlock1">
+											<div id='playerScore1'></div>
+											<div id="joinBlock1">
+												<input type="text" class="nameTextBox" id="playerName1" value="Enter Name" size="15" /> 
+												<button class="joinButton" data-player="1">Join</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4 text-center">
+								<div class="displayBox">
+									<span id="player1Choice"></span>
+									<span id="player2Choice"></span>
+									<div id="result"></div>
+								</div>
+							</div>
+							<div class="col-md-4 text-center">
+								<div class="displayBox">
+									<div id="playerDisplayBox2">
+										<div id="playerNameBox2"><h2>Waiting for Player</h2></div>
+										<div id="imgBlock2">
+											<img src="assets/images/chair.png" alt="A chair" height="200" id="rightChair" />
+										</div>
+
+										<div id="textBlock2">
+											<div id='playerScore2'></div>
+											<div id="joinBlock2">
+												<input type="text" class="nameTextBox" id="playerName2" value="Enter Name" size="15" /> 
+												<button class="joinButton" data-player="2">Join</button>
+											</div>
+										</div>
+									</div>
+								</div>						
+							</div>
+						</div>
+					</div>
+						
+				</div>
+			</div>
+			<div class="row">
+				<!-- <div class="col-md-3"></div> -->
+				<div class="col-md-12 text-center">
+					<textarea id="chatBox" cols="90" rows="10"></textarea>
+				</div>
+				<!-- <div class="col-md-3"></div> -->
+			</div>
+			<div class="row">
+				<!-- <div class="col-md-3"></div> -->
+				<div class="col-md-12 text-center">
+					<input type="textInput" id="messageText" size="80"><button id="sendMessage">Send</button>
+				</div>
+				<!-- <div class="col-md-3"></div> -->
+			</div>
+		</div>
+		<!-- JavaScript -->
+
+		<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-database.js"></script>
+		<!-- <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-auth.js"></script> -->
+		<!-- <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-storage.js"></script> -->
+		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script src="assets/javascript/app.js"></script>
+
+
+
+
+
+
+
+
+	</body>
+
+</html>

@@ -9,6 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+		<link href="https://fonts.googleapis.com/css?family=Metal+Mania" rel="stylesheet"> 
 
 		<!-- Mobile Tag -->
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,79 +18,100 @@
 
 
 	<body>
+		<div class="mainBox">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 text-center ">
-						<h2>Rock Paper Scissors MMO</h2>
+						<img src="assets/images/logo.png">
 					</div>
 				</div>
 
 				<div class="row">
-					<div class="col-md-12 text-center">
-					<!-- Main game boxes -->
-						<div class="row">
-							<div class="col-md-4 text-center">
-								<div class="displayBox">
-									<div id="playerDisplayBox1">
-										<div id="playerNameBox1"><h2>Waiting for Player</h2></div>
-										<div id="imgBlock1">
-											<img src="assets/images/chair.png" alt="A chair" height="200" id="leftChair"/>
-										</div>
-										<div id="textBlock1">
-											<div id='playerScore1'></div>
-											<div id="joinBlock1">
-												<input type="text" class="nameTextBox" id="playerName1" value="Enter Name" size="15" /> 
-												<button class="joinButton" data-player="1">Join</button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-4 text-center">
-								<div class="displayBox">
-									<span id="player1Choice"></span>
-									<span id="player2Choice"></span>
-									<div id="result"></div>
-								</div>
-							</div>
-							<div class="col-md-4 text-center">
-								<div class="displayBox">
-									<div id="playerDisplayBox2">
-										<div id="playerNameBox2"><h2>Waiting for Player</h2></div>
-										<div id="imgBlock2">
-											<img src="assets/images/chair.png" alt="A chair" height="200" id="rightChair" />
-										</div>
-
-										<div id="textBlock2">
-											<div id='playerScore2'></div>
-											<div id="joinBlock2">
-												<input type="text" class="nameTextBox" id="playerName2" value="Enter Name" size="15" /> 
-												<button class="joinButton" data-player="2">Join</button>
-											</div>
-										</div>
-									</div>
-								</div>						
-							</div>
+					<div class="col-md-6 text-left ">
+					<div class="score" id="scorePlayer1">Wins: 0 Losses: 0</div>
+						<div class="nameBox floatLeft">
+							<div id="playerHealth1" class="playerHealthBar"></div>
+							<p id="playerName1" class="nameText">Waiting For Player</p>
 						</div>
 					</div>
-						
+					<div class="col-md-6 text-right">
+						<div class="score" id="scorePlayer2">Wins: 0 Losses: 0</div>
+						<div class="nameBox floatRight">
+							<div id="playerHealth2" class="playerHealthBar"></div>
+							<p id="playerName2" class="nameText">Waiting For Player</p>
+						</div>
+					</div>
 				</div>
+
 			</div>
-			<div class="row">
-				<!-- <div class="col-md-3"></div> -->
-				<div class="col-md-12 text-center">
-					<textarea id="chatBox" cols="90" rows="10"></textarea>
+			
+
+
+			<div id="leftChar">
+				<img src="assets/images/characters/animation/empty.png" height="300" id="playerFighter1" class="noVertAlign">
+				<div class="weaponHolder" id="weaponHolderPlayer1">
+					<!-- <div class="text-center"><img src="assets/images/weapons/rock.png" class="weaponImage"></div>
+					<div class="text-center"><img src="assets/images/weapons/paper.png" class="weaponImage"></div>
+					<div class="text-center"><img src="assets/images/weapons/scissors.png" class="weaponImage"></div> -->
 				</div>
-				<!-- <div class="col-md-3"></div> -->
+
+
+
 			</div>
-			<div class="row">
-				<!-- <div class="col-md-3"></div> -->
-				<div class="col-md-12 text-center">
-					<input type="textInput" id="messageText" size="80"><button id="sendMessage">Send</button>
-				</div>
-				<!-- <div class="col-md-3"></div> -->
+			<div id="chatArea">
+				<div><textarea id="chatBox"></textarea></div>
+				<div><input type="textbox" id="messageText"><button id="sendMessage">Taunt</button></div>
+			</div>
+			<div id="rightChar">
+				<img src="assets/images/characters/animation/empty.png" height="300" id="playerFighter2" class="noVertAlign">
+				<div class="weaponHolder" id="weaponHolderPlayer2">
+
 			</div>
 
+
+
+		</div>
+
+
+
+		<div id="myModal" class="modal fade" role="dialog" data-backdrop="static">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content modalBGColor">
+					<div class="modal-header">
+						<!-- <button type="button" class="close" data-dismiss="modal" onclick="">&times;</button> -->
+						<h1 class="modal-title modalTitleFont text-center">Choose Your Warrior!</h1> 
+					</div>
+					<div class="modal-body text-center">
+						<input type="textbox" id="playerNameTextbox" value="Enter Your Name">
+						<div id="portraitTable">
+							<img src="assets/images/characters/portraits/johnny_cage.png" alt="JohnnyCage" id="johnnyCagePort" data-name="cage" class="fightersPortrait">
+							<img src="assets/images/characters/portraits/kano.png" alt="Kano" id="kanoPort" data-name="kano" class="fightersPortrait">
+							<img src="assets/images/characters/portraits/mk_logo.png" alt="MKLogo" class="dummyPortrait">
+							<img src="assets/images/characters/portraits/subzero.png" alt="SubZero" id="subZeroPort" data-name="zero" class="fightersPortrait">
+							<img src="assets/images/characters/portraits/sonya.png" alt="Sonya" id="sonyaPort" data-name="sonya" class="fightersPortrait">
+						</div>
+						<div id="portraitTable">
+							<img src="assets/images/characters/portraits/raiden.png" alt="Raiden" id="raidenPort" data-name="raiden" class="fightersPortrait">
+							<img src="assets/images/characters/portraits/liu_kang.png" alt="LiuKang" id="liuKangPort" data-name="kang" class="fightersPortrait">
+							<img src="assets/images/characters/portraits/scorpion.png" alt="Scorpion" id="scorpionPort" data-name="scorpion" class="fightersPortrait">
+						</div>
+
+						
+					</div>
+					<div class="modal-footer">
+						<div class="text-center">
+							<button type="button" class="btn btn-default btn-danger" onclick="" id="modalButton">FIGHT!</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+				
 		<!-- JavaScript -->
 
 		<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
