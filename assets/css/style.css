@@ -126,7 +126,6 @@ h1, p{
 	background-color: #00cc00;
 }
 
-
 .modalBGColor{
 	background-color: #6B6B6D;
 
@@ -169,12 +168,23 @@ h1, p{
 	float: none;
     margin: 0 auto;
     margin-top: 200px;
-	visibility: hidden;
+	/*visibility: hidden;*/
 }
 .endText{
 	margin-top: 0px;
 	font-size: 32px;
 	color: #EF0000;
 	text-shadow: 2px 2px #000000;
+}
+.weaponText{
+	margin-top: 10px;
+	font-size: 40px;
+	color: #EF0000;
+	text-shadow: 2px 2px #000000;
+}
+
+.portraitBackground{
+
+	background-color: #00cc00;
 }
 

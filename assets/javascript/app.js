@@ -54,8 +54,8 @@ $(document).on("click", "#playerNameTextbox", function(){
 });
 
 $(document).on("click", ".fightersPortrait", function(){
-	$(".fightersPortrait").css({"background-color": "transparent"});
-	$(this).css({"background-color": "#00cc00"});
+	$(".fightersPortrait").removeClass("portraitBackground");
+	$(this).addClass("portraitBackground");
 	playerWarrior = $(this).data("name");
 
 	if(playerWarrior!==""){
@@ -86,14 +86,29 @@ $(document).on("click", "#modalButton", function(){
 	}
 });
 
+
+//Send Messages by click
 $(document).on("click", "#sendMessage", function(){
 	var message = $("#messageText").val();
 	writeChat(message);
+	$("#messageText").val("");
 
+});
+
+//Send Messages by "enter" keypress
+$("input").keypress(function(event) {
+    if (event.which == 13) {
+    	event.preventDefault();
+    	var message = $("#messageText").val();
+       	writeChat(message);
+       	$("#messageText").val("");
+    }
 });
 
 $(document).on("click", ".weaponImage", function(){
 	var itemChoice = $(this).data("item");
+	$("#textResult").empty();
+	$("#textResult").append("<p class=\"weaponText\">Waiting For Player</p>");
 	$("#weaponHolderPlayer"+playerID).empty();
 	$("#weaponHolderPlayer"+playerID).append(
 		"<div class=\"text-center\"><img class=\"weaponImage\" data-item=\""+itemChoice+"\" width=\"80\" src=\"./assets/images/weapons/"+itemChoice+".png\"></div>");
@@ -101,6 +116,12 @@ $(document).on("click", ".weaponImage", function(){
 
 });
 
+// //write messag
+// function writeMessage(){
+// 	var message = $("#messageText").val();
+// 	writeChat(message);
+// 	$("#messageText").val("");
+// }
 
 
 function getCurrentPlayers(){
@@ -204,7 +225,6 @@ function addUser(currentPlayer, seatNum, warrior){
 
 function writeChat(chat){
 	var lineObj = {line: chat};
-
 	database.ref('chat/').update(lineObj);
 }
 
@@ -373,6 +393,8 @@ function getScore(){
 }
 
 function newGameTimer(){
+
+	$("#textResult").empty();
 	resultsTimer = setTimeout(function(){
 
 		resultsDelay();
@@ -389,7 +411,7 @@ function newGameTimer(){
 		$("#playerRPS2").attr("alt", "dummyIMG");
 		$("#playerRPS2").attr("width", "1");
 
-		$("#fightBox").css({"visibility":"hidden"});
+		// $("#fightBox").css({"visibility":"hidden"});
 		$("#textResult").empty();
 		showWeapons();
 		
@@ -407,6 +429,7 @@ function leaveChair(seatNum){
 }
 
 function showWeapons(){
+		$("#textResult").append("<p class=\"weaponText\">Choose Your Weapon</p>");
 	  	$("#weaponHolderPlayer"+playerID).empty()
 		var imgDiv = $("#weaponHolderPlayer"+playerID);
 		$("#weaponHolderPlayer"+playerID).css({"display":"inline-block"});
@@ -417,7 +440,7 @@ function showWeapons(){
 }
 
 function resultsDelay(){
-	$("#textResult").append("<h3 class=\"endText\">"+winnerText+"</h3>");
+	$("#textResult").append("<p class=\"endText\">"+winnerText+"</p>");
 	var ratioP1 = (lossesP1/(lossesP1+winsP1))*100;
 	$("#playerHealth1").css({"width":ratioP1+"%"});
 	$("#scorePlayer1").html("Wins: "+winsP1+" Losses: "+lossesP1);
