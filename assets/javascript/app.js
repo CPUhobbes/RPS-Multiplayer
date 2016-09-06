@@ -54,6 +54,7 @@ $(document).on("click", "#playerNameTextbox", function(){
 });
 
 $(document).on("click", ".fightersPortrait", function(){
+
 	$(".fightersPortrait").removeClass("portraitBackground");
 	$(this).addClass("portraitBackground");
 	playerWarrior = $(this).data("name");
@@ -62,6 +63,9 @@ $(document).on("click", ".fightersPortrait", function(){
 		$("#modalButton").attr("data-dismiss","modal");
 	}
 	hasSelectedFighter = true;
+
+	//audio for character selection
+	$("#characterSounds").attr("src","./assets/audio/sfx/"+playerWarrior+".mp3");
 });
 
 $(document).on("click", "#modalButton", function(){
@@ -115,14 +119,6 @@ $(document).on("click", ".weaponImage", function(){
 	playerChoice(itemChoice);
 
 });
-
-// //write messag
-// function writeMessage(){
-// 	var message = $("#messageText").val();
-// 	writeChat(message);
-// 	$("#messageText").val("");
-// }
-
 
 function getCurrentPlayers(){
 
@@ -206,6 +202,9 @@ function addUser(currentPlayer, seatNum, warrior){
 						}});
 			playerID=2;
 		}
+
+		$("#music_player").attr("src","./assets/audio/music/courtyard.mp3");
+		console.log("./assets/audio/music/courtyard.mp3");
 		console.log(numWins, numLosses);
 		showWeapons();
 		playerName=currentPlayer;
@@ -288,42 +287,36 @@ function checkResult(){
 				$("#playerRPS1").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/left_R.gif");
 				$("#playerRPS2").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/right_P.gif");
 				winnerText="Player 2 Wins!";
-				
 				results(2);
 			}
 			else if ((pOneChoice === "scissors") && (pTwoChoice === "rock")){
 				$("#playerRPS1").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/left_S.gif");
 				$("#playerRPS2").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/right_R.gif");
 				winnerText="Player 2 Wins!";
-				
 				results(2);
 			}
 			else if ((pOneChoice === "scissors") && (pTwoChoice === "paper")){
 				$("#playerRPS1").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/left_S.gif");
 				$("#playerRPS2").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/right_P.gif");
 				winnerText="Player 1 Wins!";
-				
 				results(1);
 			}
 			else if ((pOneChoice === "paper") && (pTwoChoice === "rock")){
 				$("#playerRPS1").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/left_P.gif");
 				$("#playerRPS2").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/right_R.gif");
 				winnerText="Player 1 Wins!";
-				
 				results(1);
 			}
 			else if ((pOneChoice === "paper") && (pTwoChoice === "scissors")){
 				$("#playerRPS1").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/left_P.gif");
 				$("#playerRPS2").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/right_S.gif");
 				winnerText="Player 2 Wins!";
-				
 				results(2);
 			}
 			else if ((pOneChoice === pTwoChoice) && (pTwoChoice === "paper")){
 				$("#playerRPS1").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/left_P.gif");
 				$("#playerRPS2").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/right_P.gif");
 				winnerText="It's a Tie!";
-				
 				results(0);
 			}
 			else if ((pOneChoice === pTwoChoice) && (pTwoChoice === "scissors")){
@@ -336,6 +329,7 @@ function checkResult(){
 				$("#playerRPS1").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/left_R.gif");
 				$("#playerRPS2").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/right_R.gif");
 				winnerText="It's a Tie!";
+				results(0);
 			}
 		}
 	});	
@@ -374,19 +368,10 @@ function getScore(){
 		if(snapshot.val().seat === 1){
 			winsP1 = snapshot.val().wins;
 			lossesP1 = snapshot.val().losses;
-			// var ratioP1 = 100-(winsP1/lossesP1*50);
-			// $("#playerHealth1").css({"width":ratioP1+"%"});
-			// $("#scorePlayer1").html("Wins: "+winsP1+" Losses: "+lossesP1);
-			// console.log("p1 rat-",ratioP1);
-
 		}
 		else if (snapshot.val().seat === 2){
 			winsP2 = snapshot.val().wins;
 			lossesP2 = snapshot.val().losses;
-			// var ratioP2 = 100-(winsP2/lossesP2*50);
-			// $("#playerHealth2").css({"width":ratioP2+"%"});
-			// $("#scorePlayer2").html("Wins: "+winsP2+" Losses: "+lossesP2);
-			// console.log("p2 rat-",ratioP2);
 		}
 
 	});
