@@ -84,24 +84,6 @@ $(document).on("click", "#modalButton", function(){
 	}
 });
 
-
-
-
-// $(document).on("click", ".joinButton", function(){
-// 	var pOneName = $("#playerName1").val();
-// 	var pTwoName = $("#playerName2").val();
-// 	var playerDataNum = $(this).data("player");
-
-// 	if((playerDataNum === 1)  && (pOneName!=="") && (pOneName!==null) && (pOneName!="Enter Name")){
-// 		addUser(pOneName, playerDataNum);
-// 	}
-// 	else if((playerDataNum === 2)  && (pTwoName!=="") && (pTwoName!==null) && (pTwoName!="Enter Name")){
-// 		addUser(pTwoName, playerDataNum);
-// 	}
-
-// });
-
-
 $(document).on("click", "#sendMessage", function(){
 	var message = $("#messageText").val();
 	writeChat(message);
@@ -125,25 +107,15 @@ function getCurrentPlayers(){
 	database.ref().child("player").on("child_added", function(snapshot) {
 
 		 if(snapshot.val().seat === 1){
-		 	// $("#playerName1").empty();
 			$("#playerName1").html(snapshot.val().name);
 			$("#playerFighter1").attr("src", ANI_DIR+snapshot.val().fighter+".gif");
 			$("#imgBlock1").empty();
-		 // 	$("#imgBlock1").append("<img src=\"assets/images/arnold.png\" alt=\"A chair\" height=\"200\" id=\"leftChair\"/>");
-			// $("#playerScore1").append("<p>Wins:<span id=\"wins1\">"+numWins+"</span>Losses:<span id=\"losses1\">"+numLosses+"</span></p>");
-			// $("#joinBlock1").empty();
 		 	 openPlayerOne=false;
 		 }
 
 		 else if(snapshot.val().seat === 2){
-		 	// $("#leftChar").empty();
 		 	$("#playerFighter2").attr("src", ANI_DIR+snapshot.val().fighter+".gif");
 			$("#playerName2").html(snapshot.val().name);
-
-			// $("#imgBlock2").empty();
-		 // 	$("#imgBlock2").append("<img src=\"assets/images/theRock.png\" alt=\"A chair\" height=\"200\" id=\"rightChair\"/>");
-			// $("#playerScore2").append("<p>Wins:<span id=\"wins2\">"+numWins+"</span>Losses:<span id=\"losses2\">"+numLosses+"</span></p>");
-			// $("#joinBlock2").empty();
 		 	 openPlayerTwo=false;
 		 }
 	});
@@ -155,18 +127,12 @@ function getCurrentPlayers(){
 		 if(seatNum === 1){
 		 	$("#playerName1").html("Waiting for Player");
 		 	$("#playerFighter1").attr("src", ANI_DIR+"empty.png");
-			// $("#leftChair").attr("src", "assets/images/chair.png");
-		 // 	$("#imgBlock1").empty();
-		 // 	$("#imgBlock1").append("<img src=\"assets/images/chair.png\" alt=\"A chair\" height=\"200\" id=\"leftChair\"/>");
 		 	leaveChair(seatNum);
 		 }
 
 		 else if(seatNum === 2){
 		 	$("#playerName2").html("Waiting for Player");
 		 	$("#playerFighter2").attr("src", ANI_DIR+"empty.png");
-			// $("#rightChair").attr("src", "assets/images/chair.png");
-		 // 	$("#imgBlock2").empty();
-		 // 	$("#imgBlock2").append("<img src=\"assets/images/chair.png\" alt=\"A chair\" height=\"200\" id=\"rightChair\"/>");
 		 	leaveChair(seatNum);
 		 }
 	});
@@ -218,7 +184,7 @@ function addUser(currentPlayer, seatNum, warrior){
 						}});
 			playerID=2;
 		}
-
+		console.log(numWins, numLosses);
 		showWeapons();
 		playerName=currentPlayer;
 		connectDB(playerName);
@@ -298,7 +264,6 @@ function checkResult(){
 
 	database.ref().on("child_changed", function(snapshot) {
 
-		// console.log(snapshot.val());
 		var tempBool1 = snapshot.child("1").child("choice").exists();
 		var tempBool2 = snapshot.child("2").child("choice").exists();
 
@@ -306,67 +271,69 @@ function checkResult(){
 			var pOneChoice = snapshot.child("1").child("choice").val();
 			var pTwoChoice = snapshot.child("2").child("choice").val();
 			clearResults();
-
+			$("#fightBox").css({"visibility":"visible"});
 			if ((pOneChoice === "rock") && (pTwoChoice === "scissors")){
-				// $("#player1Choice").append("<img src=\"assets/images/left_R.gif\" alt=\"rock\" width=\"100\"/>");
-				// $("#player2Choice").append("<img src=\"assets/images/right_S.gif\" alt=\"scissors\" width=\"100\"/>");
-				// $("#result").append("<h3>Player 1 Wins!</h3>");
+				
+				$("#playerRPS1").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/left_R.gif");
+				$("#playerRPS2").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/right_S.gif");
+
+				$("#textResult").append("<h3>Player 1 Wins!</h3>");
 				console.log(pOneChoice, pTwoChoice);
 				results(1);
 			}
 			else if ((pOneChoice === "rock") && (pTwoChoice === "paper")){
-				// $("#player1Choice").append("<img src=\"assets/images/left_R.gif\" alt=\"rock\" width=\"100\"/>");
-				// $("#player2Choice").append("<img src=\"assets/images/right_P.gif\" alt=\"paper\" width=\"100\"/>");
-				// $("#result").append("<h3>Player 2 Wins!</h3>");
+				$("#playerRPS1").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/left_R.gif");
+				$("#playerRPS2").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/right_P.gif");
+				$("#textResult").append("<h3>Player 2 Wins!</h3>");
 				console.log(pOneChoice, pTwoChoice);
 				results(2);
 			}
 			else if ((pOneChoice === "scissors") && (pTwoChoice === "rock")){
-				// $("#player1Choice").append("<img src=\"assets/images/left_S.gif\" alt=\"scissors\" width=\"100\"/>");
-				// $("#player2Choice").append("<img src=\"assets/images/right_R.gif\" alt=\"rock\" width=\"100\"/>");
-				// $("#result").append("<h3>Player 2 Wins!</h3>");
+				$("#playerRPS1").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/left_S.gif");
+				$("#playerRPS2").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/right_R.gif");
+				$("#textResult").append("<h3>Player 2 Wins!</h3>");
 				console.log(pOneChoice, pTwoChoice);
 				results(2);
 			}
 			else if ((pOneChoice === "scissors") && (pTwoChoice === "paper")){
-				// $("#player1Choice").append("<img src=\"assets/images/left_S.gif\" alt=\"scissors\" width=\"100\"/>");
-				// $("#player2Choice").append("<img src=\"assets/images/right_P.gif\" alt=\"paper\" width=\"100\"/>");
-				// $("#result").append("<h3>Player 1 Wins!</h3>");
+				$("#playerRPS1").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/left_S.gif");
+				$("#playerRPS2").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/right_P.gif");
+				$("#textResult").append("<h3>Player 1 Wins!</h3>");
 				console.log(pOneChoice, pTwoChoice);
 				results(1);
 			}
 			else if ((pOneChoice === "paper") && (pTwoChoice === "rock")){
-				// $("#player1Choice").append("<img src=\"assets/images/left_P.gif\" alt=\"paper\" width=\"100\"/>");
-				// $("#player2Choice").append("<img src=\"assets/images/right_R.gif\" alt=\"rock\" width=\"100\"/>");
-				// $("#result").append("<h3>Player 1 Wins!</h3>");
+				$("#playerRPS1").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/left_P.gif");
+				$("#playerRPS2").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/right_R.gif");
+				$("#textResult").append("<h3>Player 1 Wins!</h3>");
 				console.log(pOneChoice, pTwoChoice);
 				results(1);
 			}
 			else if ((pOneChoice === "paper") && (pTwoChoice === "scissors")){
-				// $("#player1Choice").append("<img src=\"assets/images/left_P.gif\" alt=\"paper\" width=\"100\"/>");
-				// $("#player2Choice").append("<img src=\"assets/images/right_S.gif\" alt=\"scissors\" width=\"100\"/>");
-				// $("#result").append("<h3>Player 2 Wins!</h3>");
+				$("#playerRPS1").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/left_P.gif");
+				$("#playerRPS2").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/right_S.gif");
+				$("#textResult").append("<h3>Player 2 Wins!</h3>");
 				console.log(pOneChoice, pTwoChoice);
 				results(2);
 			}
 			else if ((pOneChoice === pTwoChoice) && (pTwoChoice === "paper")){
-				// $("#player1Choice").append("<img src=\"assets/images/left_P.gif\" alt=\"paper\" width=\"100\"/>");
-				// $("#player2Choice").append("<img src=\"assets/images/right_P.gif\" alt=\"paper\" width=\"100\"/>");
-				// $("#result").append("<h3>Its a Tie!</h3>");
+				$("#playerRPS1").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/left_P.gif");
+				$("#playerRPS2").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/right_P.gif");
+				$("#textResult").append("<h3>Its a Tie!</h3>");
 				console.log(pOneChoice, pTwoChoice);
 				results(0);
 			}
 			else if ((pOneChoice === pTwoChoice) && (pTwoChoice === "scissors")){
-				// $("#player1Choice").append("<img src=\"assets/images/left_S.gif\" alt=\"scissors\" width=\"100\"/>");
-				// $("#player2Choice").append("<img src=\"assets/images/right_S.gif\" alt=\"scissors\" width=\"100\"/>");
-				// $("#result").append("<h3>Its a Tie!</h3>");
+				$("#playerRPS1").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/left_S.gif");
+				$("#playerRPS2").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/right_S.gif");
+				$("#textResult").append("<h3>Its a Tie!</h3>");
 				console.log(pOneChoice, pTwoChoice);
 				results(0);
 			}
 			else if ((pOneChoice === pTwoChoice) && (pTwoChoice === "rock")){
-				// $("#player1Choice").append("<img src=\"assets/images/left_R.gif\" alt=\"rock\" width=\"100\"/>");
-				// $("#player2Choice").append("<img src=\"assets/images/right_R.gif\" alt=\"rock\" width=\"100\"/>");
-				// $("#result").append("<h3>Its a Tie!</h3>");
+				$("#playerRPS1").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/left_R.gif");
+				$("#playerRPS2").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/right_R.gif");
+				$("#textResult").append("<h3>Its a Tie!</h3>");
 				console.log(pOneChoice, pTwoChoice);
 				results(0);
 			}
@@ -376,7 +343,7 @@ function checkResult(){
 }
 
 function results(playerNum){
-
+	console.log(numWins, numLosses);
 	if(playerNum === playerID){
 		numWins+=1;
 	}
@@ -387,6 +354,7 @@ function results(playerNum){
 	// else{ //TIE
 		
 	// }
+	console.log(numWins, numLosses);
 	updateScoreDB();
 	newGameTimer();
 
@@ -423,9 +391,16 @@ function getScore(){
 
 function newGameTimer(){
 	timer = setTimeout(function() {
-		$("#player2Choice").empty();
-		$("#player1Choice").empty();
-		$("#result").empty();
+		$("#fightBox").css({"visibility":"hidden"});
+		$("#playerRPS1").attr("src", "assets/images/characters/animation/empty.png");
+		$("#playerRPS1").attr("alt", "dummyIMG");
+		$("#playerRPS1").attr("width", "1");
+
+		$("#playerRPS2").attr("src", "assets/images/characters/animation/empty.png");
+		$("#playerRPS2").attr("alt", "dummyIMG");
+		$("#playerRPS2").attr("width", "1");
+
+		$("#textResult").empty();
 		showWeapons();
 	}
 	, 4000);

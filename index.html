@@ -3,6 +3,7 @@
 	<head>
 		<title>RPS Multiplayer Game</title>
 
+
 		<meta charset="UTF-8"> 
 
 		 <!-- CSS -->
@@ -22,7 +23,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 text-center ">
-						<img src="assets/images/logo.png">
+						<img src="assets/images/logo.png" alt="Logo">
 					</div>
 				</div>
 
@@ -42,36 +43,33 @@
 						</div>
 					</div>
 				</div>
-
-			</div>
-			
-
-
-			<div id="leftChar">
-				<img src="assets/images/characters/animation/empty.png" height="300" id="playerFighter1" class="noVertAlign">
-				<div class="weaponHolder" id="weaponHolderPlayer1">
-					<!-- <div class="text-center"><img src="assets/images/weapons/rock.png" class="weaponImage"></div>
-					<div class="text-center"><img src="assets/images/weapons/paper.png" class="weaponImage"></div>
-					<div class="text-center"><img src="assets/images/weapons/scissors.png" class="weaponImage"></div> -->
+				<div class="row">
+					<div class="col-md-12">
+						<div id="fightBox" class="text-center">
+							<span class="text-left"><img id="playerRPS1" src="assets/images/characters/animation/empty.png" alt="dummyIMG" width="100"></span>
+							<span class="text-right"><img id="playerRPS2" src="assets/images/characters/animation/empty.png" alt="dummyIMG" width="100"></span>
+							<div id="textResult"></div>
+						</div>
+					</div>
 				</div>
-
-
-
+				<div id="leftChar">
+					<img src="assets/images/characters/animation/empty.png" height="300" id="playerFighter1" alt="dummyIMG" class="noVertAlign">
+					<div class="weaponHolder" id="weaponHolderPlayer1">
+						<!-- <div class="text-center"><img src="assets/images/weapons/rock.png" class="weaponImage"></div>
+						<div class="text-center"><img src="assets/images/weapons/paper.png" class="weaponImage"></div>
+						<div class="text-center"><img src="assets/images/weapons/scissors.png" class="weaponImage"></div> -->
+					</div>
+				</div>
+				<div id="chatArea">
+					<div><textarea id="chatBox"></textarea></div>
+					<div><input type="text" id="messageText"><button id="sendMessage">Taunt</button></div>
+				</div>
+				<div id="rightChar">
+					<img src="assets/images/characters/animation/empty.png" height="300" id="playerFighter2" alt="dummyIMG" class="noVertAlign">
+					<div class="weaponHolder" id="weaponHolderPlayer2"></div>
+				</div>
 			</div>
-			<div id="chatArea">
-				<div><textarea id="chatBox"></textarea></div>
-				<div><input type="textbox" id="messageText"><button id="sendMessage">Taunt</button></div>
-			</div>
-			<div id="rightChar">
-				<img src="assets/images/characters/animation/empty.png" height="300" id="playerFighter2" class="noVertAlign">
-				<div class="weaponHolder" id="weaponHolderPlayer2">
-
-			</div>
-
-
-
 		</div>
-
 
 
 		<div id="myModal" class="modal fade" role="dialog" data-backdrop="static">
@@ -83,15 +81,15 @@
 						<h1 class="modal-title modalTitleFont text-center">Choose Your Warrior!</h1> 
 					</div>
 					<div class="modal-body text-center">
-						<input type="textbox" id="playerNameTextbox" value="Enter Your Name">
-						<div id="portraitTable">
+						<input type="text" id="playerNameTextbox" value="Enter Your Name">
+						<div class="portraitTable">
 							<img src="assets/images/characters/portraits/johnny_cage.png" alt="JohnnyCage" id="johnnyCagePort" data-name="cage" class="fightersPortrait">
 							<img src="assets/images/characters/portraits/kano.png" alt="Kano" id="kanoPort" data-name="kano" class="fightersPortrait">
 							<img src="assets/images/characters/portraits/mk_logo.png" alt="MKLogo" class="dummyPortrait">
 							<img src="assets/images/characters/portraits/subzero.png" alt="SubZero" id="subZeroPort" data-name="zero" class="fightersPortrait">
 							<img src="assets/images/characters/portraits/sonya.png" alt="Sonya" id="sonyaPort" data-name="sonya" class="fightersPortrait">
 						</div>
-						<div id="portraitTable">
+						<div class="portraitTable">
 							<img src="assets/images/characters/portraits/raiden.png" alt="Raiden" id="raidenPort" data-name="raiden" class="fightersPortrait">
 							<img src="assets/images/characters/portraits/liu_kang.png" alt="LiuKang" id="liuKangPort" data-name="kang" class="fightersPortrait">
 							<img src="assets/images/characters/portraits/scorpion.png" alt="Scorpion" id="scorpionPort" data-name="scorpion" class="fightersPortrait">
