@@ -111,6 +111,15 @@ $(document).on("click", ".fightersPortrait", function(){
 	}
 });
 
+$(document).on("click", "#modalButton", function(){
+	if(playAudio && hasSelectedFighter){
+		$("#characterSounds").attr("src","./assets/audio/sfx/fight.mp3");
+		document.getElementById("characterSounds").play();
+	}
+
+
+});
+
 //Start game after player meets conditions
 $(document).on("click", "#modalButton", function(){
 	if(hasSelectedFighter){
