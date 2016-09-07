@@ -10,10 +10,15 @@ firebase.initializeApp(config);
 var database = firebase.database();
 
 var playerWarrior="";
+var fighterName1 ="";
+var fighterName2 ="";
+
 var playerName="Noob Saibot";
 var hasSelectedFighter = false;
 
 var ANI_DIR = "assets/images/characters/animation/";
+var MUSIC_DIR = "assets/audio/music/";
+var MUSIC_LIST = ["courtyard.mp3", "palace_gates.mp3", "pit.mp3", "throne_room.mp3", "warrior_shrine.mp3"];
 
 var playerID=0;
 var openPlayerOne=true;
@@ -28,12 +33,15 @@ var winsP2=0;
 var lossesP1=0;
 var lossesP2=0;
 var winnerText="";
+var winnerNumber = 0;
 
 var choiceOne;
 var choiceTwo;
 
 var gameTimer;
 var resultsTimer;
+
+var playAudio = true;
 
 
 $(document).ready(function(){
@@ -45,8 +53,26 @@ $(document).ready(function(){
 	checkResult();
 	getScore();
 	$("#myModal").modal('show');
-
 });
+
+$(document).on("click", ".audioButton", function(){
+	if(playAudio){
+		$(".audioButton").removeClass("fa-pause");
+		$(".audioButton").addClass("fa-play");
+		playAudio = false;
+		mute(false);
+	}
+	else{
+		$(".audioButton").removeClass("fa-play");
+		$(".audioButton").addClass("fa-pause");
+		playAudio = true;
+		mute(true);
+
+	}
+});
+
+
+
 
 
 $(document).on("click", "#playerNameTextbox", function(){
@@ -65,7 +91,10 @@ $(document).on("click", ".fightersPortrait", function(){
 	hasSelectedFighter = true;
 
 	//audio for character selection
-	$("#characterSounds").attr("src","./assets/audio/sfx/"+playerWarrior+".mp3");
+	if(playAudio){
+		$("#characterSounds").attr("src","./assets/audio/sfx/"+playerWarrior+".mp3");
+		document.getElementById("characterSounds").play();
+	}
 });
 
 $(document).on("click", "#modalButton", function(){
@@ -85,11 +114,10 @@ $(document).on("click", "#modalButton", function(){
 			addUser(playerName, 2, playerWarrior);
 		}
 		else{
-			alert("Nope"); // ----------- ADD CANNOT JOIN MESSAGE AT THIS TIME
+			alert("Game Full"); // ----------- ADD CANNOT JOIN MESSAGE AT THIS TIME
 		}
 	}
 });
-
 
 //Send Messages by click
 $(document).on("click", "#sendMessage", function(){
@@ -127,14 +155,18 @@ function getCurrentPlayers(){
 		 if(snapshot.val().seat === 1){
 			$("#playerName1").html(snapshot.val().name);
 			$("#playerFighter1").attr("src", ANI_DIR+snapshot.val().fighter+".gif");
-			$("#imgBlock1").empty();
-		 	 openPlayerOne=false;
+			$("#playerHealth1").css({"width":"0%"});
+		 	openPlayerOne=false;
+			fighterName1 = snapshot.val().fighter;
+		 	 
 		 }
 
 		 else if(snapshot.val().seat === 2){
 		 	$("#playerFighter2").attr("src", ANI_DIR+snapshot.val().fighter+".gif");
 			$("#playerName2").html(snapshot.val().name);
-		 	 openPlayerTwo=false;
+			$("#playerHealth2").css({"width":"0%"});
+		 	openPlayerTwo=false;
+		 	fighterName2 = snapshot.val().fighter;
 		 }
 	});
 
@@ -145,12 +177,16 @@ function getCurrentPlayers(){
 		 if(seatNum === 1){
 		 	$("#playerName1").html("Waiting for Player");
 		 	$("#playerFighter1").attr("src", ANI_DIR+"empty.png");
-		 	leaveChair(seatNum);
+		 	$("#playerHealth1").css({"width":"100%"});
+			$("#scorePlayer1").html("Wins: 0 Losses: 0");
+			leaveChair(seatNum);
 		 }
 
 		 else if(seatNum === 2){
 		 	$("#playerName2").html("Waiting for Player");
 		 	$("#playerFighter2").attr("src", ANI_DIR+"empty.png");
+		 	$("#playerHealth2").css({"width":"100%"});
+			$("#scorePlayer2").html("Wins: 0 Losses: 0");
 		 	leaveChair(seatNum);
 		 }
 	});
@@ -202,15 +238,16 @@ function addUser(currentPlayer, seatNum, warrior){
 						}});
 			playerID=2;
 		}
-
-		$("#music_player").attr("src","./assets/audio/music/courtyard.mp3");
-		console.log("./assets/audio/music/courtyard.mp3");
-		console.log(numWins, numLosses);
-		showWeapons();
+		$("#music_player").removeAttr("autoplay");
+		$("#music_player").removeAttr("loop");
+		changeAudio();
+		$("#music_player").on('ended', changeAudio);
 		playerName=currentPlayer;
 		connectDB(playerName);
 		disconnectDB(playerID);
 		canJoin = false;
+		showWeapons();
+		showAudioControls();
 	}
 
 	else if(!canJoin && playerID>0){
@@ -280,55 +317,64 @@ function checkResult(){
 				
 				$("#playerRPS1").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/left_R.gif");
 				$("#playerRPS2").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/right_S.gif");
-				winnerText="Player 1 Wins!";
+				winnerText=$("#playerName1").html()+" Wins!";
+				winnerNumber =1;
 				results(1);
 			}
 			else if ((pOneChoice === "rock") && (pTwoChoice === "paper")){
 				$("#playerRPS1").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/left_R.gif");
 				$("#playerRPS2").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/right_P.gif");
-				winnerText="Player 2 Wins!";
+				winnerText=$("#playerName2").html()+" Wins!";
+				winnerNumber =2;
 				results(2);
 			}
 			else if ((pOneChoice === "scissors") && (pTwoChoice === "rock")){
 				$("#playerRPS1").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/left_S.gif");
 				$("#playerRPS2").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/right_R.gif");
-				winnerText="Player 2 Wins!";
+				winnerText=$("#playerName2").html()+" Wins!";
+				winnerNumber =2;
 				results(2);
 			}
 			else if ((pOneChoice === "scissors") && (pTwoChoice === "paper")){
 				$("#playerRPS1").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/left_S.gif");
 				$("#playerRPS2").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/right_P.gif");
-				winnerText="Player 1 Wins!";
+				winnerText=$("#playerName1").html()+" Wins!";
+				winnerNumber =1;
 				results(1);
 			}
 			else if ((pOneChoice === "paper") && (pTwoChoice === "rock")){
 				$("#playerRPS1").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/left_P.gif");
 				$("#playerRPS2").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/right_R.gif");
-				winnerText="Player 1 Wins!";
+				winnerText=$("#playerName1").html()+" Wins!";
+				winnerNumber =1;
 				results(1);
 			}
 			else if ((pOneChoice === "paper") && (pTwoChoice === "scissors")){
 				$("#playerRPS1").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/left_P.gif");
 				$("#playerRPS2").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/right_S.gif");
-				winnerText="Player 2 Wins!";
+				winnerText=$("#playerName2").html()+" Wins!";
+				winnerNumber =2;
 				results(2);
 			}
 			else if ((pOneChoice === pTwoChoice) && (pTwoChoice === "paper")){
 				$("#playerRPS1").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/left_P.gif");
 				$("#playerRPS2").attr("alt", "paper").attr("width", "100").attr("src", "assets/images/right_P.gif");
 				winnerText="It's a Tie!";
+				winnerNumber =0;
 				results(0);
 			}
 			else if ((pOneChoice === pTwoChoice) && (pTwoChoice === "scissors")){
 				$("#playerRPS1").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/left_S.gif");
 				$("#playerRPS2").attr("alt", "scissors").attr("width", "100").attr("src", "assets/images/right_S.gif");
 				winnerText="It's a Tie!";
+				winnerNumber =0;
 				results(0);
 			}
 			else if ((pOneChoice === pTwoChoice) && (pTwoChoice === "rock")){
 				$("#playerRPS1").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/left_R.gif");
 				$("#playerRPS2").attr("alt", "rock").attr("width", "100").attr("src", "assets/images/right_R.gif");
 				winnerText="It's a Tie!";
+				winnerNumber =0;
 				results(0);
 			}
 		}
@@ -383,6 +429,7 @@ function newGameTimer(){
 	resultsTimer = setTimeout(function(){
 
 		resultsDelay();
+		audioWinner();
 	}
 	,2000);
 
@@ -415,13 +462,13 @@ function leaveChair(seatNum){
 
 function showWeapons(){
 		$("#textResult").append("<p class=\"weaponText\">Choose Your Weapon</p>");
-	  	$("#weaponHolderPlayer"+playerID).empty()
+	  	$("#weaponHolderPlayer"+playerID).empty();
 		var imgDiv = $("#weaponHolderPlayer"+playerID);
-		$("#weaponHolderPlayer"+playerID).css({"display":"inline-block"});
 		var rock = "<div class=\"text-center\"><img class=\"weaponImage\" data-item=\"rock\" width=\"80\" src=\"./assets/images/weapons/rock.png\"></div>";
 		var paper = "<div class=\"text-center\"><img class=\"weaponImage\" data-item=\"paper\" width=\"80\" src=\"./assets/images/weapons/paper.png\"></div>";
 		var scissors = "<div class=\"text-center\"><img class=\"weaponImage\" data-item=\"scissors\" width=\"80\" src=\"./assets/images/weapons/scissors.png\"></div>";
 		imgDiv.append(rock,paper,scissors);
+		$("#weaponHolderPlayer"+playerID).css({"visibility":"visible"});
 }
 
 function resultsDelay(){
@@ -433,7 +480,40 @@ function resultsDelay(){
 	var ratioP2 = (lossesP2/(lossesP2+winsP2))*100;
 	$("#playerHealth2").css({"width":ratioP2+"%"});
 	$("#scorePlayer2").html("Wins: "+winsP2+" Losses: "+lossesP2);
+}
 
+function changeAudio() {  
+	$("#music_player").attr("src", MUSIC_DIR+MUSIC_LIST[Math.ceil(Math.random()*MUSIC_LIST.length)-1]);
+	if(playAudio){
+		document.getElementById("music_player").play();
+	}
+	
+}
+function mute(sound){
+	if(sound){
+		document.getElementById("music_player").play();
+	}
+	else{
+		document.getElementById("music_player").pause();
+	}
+}
 
-
+function showAudioControls(){
+ 	$("#audioBox").css({"visibility":"visible"});
+}
+function audioWinner() {  
+	var winner;
+	if(winnerNumber === 1){
+		winner = fighterName1;
+	}
+	else if (winnerNumber === 2){
+		winner = fighterName2;
+	}
+	else{
+		winner = "fatality";
+	}
+	if(playAudio){
+		$("#characterSounds").attr("src", "assets/audio/sfx/"+winner+"_wins.mp3");
+		document.getElementById("characterSounds").play();
+	}
 }

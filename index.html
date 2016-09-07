@@ -20,6 +20,10 @@
 
 	<body>
 		<div class="mainBox">
+			<div id="audioBox"><button type="button" class="close playControlsLeft" onclick="">
+				<i class="fa fa-play audioButton" aria-hidden="true"></i></button>
+			</div>
+
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 text-center ">
@@ -53,7 +57,7 @@
 					</div>
 				</div>
 				<div id="leftChar">
-					<img src="assets/images/characters/animation/empty.png" height="300" id="playerFighter1" alt="dummyIMG" class="noVertAlign">
+					<img src="assets/images/characters/animation/empty.png" height="300" width="160" id="playerFighter1" alt="dummyIMG" class="noVertAlign">
 					<div class="weaponHolder" id="weaponHolderPlayer1"></div>
 				</div>
 				<div id="chatArea">
@@ -61,7 +65,7 @@
 					<div><input type="text" id="messageText"><button id="sendMessage">Taunt</button></div>
 				</div>
 				<div id="rightChar">
-					<img src="assets/images/characters/animation/empty.png" height="300" id="playerFighter2" alt="dummyIMG" class="noVertAlign">
+					<img src="assets/images/characters/animation/empty.png" height="300" width=160" id="playerFighter2" alt="dummyIMG" class="noVertAlign">
 					<div class="weaponHolder" id="weaponHolderPlayer2"></div>
 				</div>
 			</div>
@@ -73,7 +77,7 @@
 				<!-- Modal content-->
 				<div class="modal-content modalBGColor">
 					<div class="modal-header">
-						<!-- <button type="button" class="close" data-dismiss="modal" onclick="">&times;</button> -->
+						<button type="button" class="close" onclick=""><i class="fa fa-pause audioButton" aria-hidden="true"></i></button>
 						<h1 class="modal-title modalTitleFont text-center">Choose Your Warrior!</h1> 
 					</div>
 					<div class="modal-body text-center">
@@ -106,9 +110,10 @@
 
 		<!-- Audio Players -->
     	<audio id="music_player" src="assets/audio/music/player_select.mp3" autoplay loop>
+
         	Your browser does not support the HTML5 Audio element.
     	</audio>
-    	<audio id="characterSounds" autoplay>
+    	<audio id="characterSounds">
         	Your browser does not support the HTML5 Audio element.
     	</audio>
 
@@ -123,6 +128,7 @@
 		<!-- <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-storage.js"></script> -->
 		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script src="https://use.fontawesome.com/4114828a53.js"></script>
 		<script src="assets/javascript/app.js"></script>
 
 

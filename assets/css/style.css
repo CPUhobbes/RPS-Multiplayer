@@ -8,6 +8,9 @@ h1, p{
 	font-family: 'Metal Mania', cursive;
 	color: #EFEF00;
 }
+button:focus {
+	outline:0;
+}
 .noVertAlign{
 	    vertical-align: top;
 }
@@ -142,10 +145,10 @@ h1, p{
 
 }
 .weaponHolder{
-	display: none;
+	display: inline-block;
+	visibility: hidden;
 	width:100px;
 	height:300px;
-	/*background-color: rgba(105,0,0,.8);*/
 	line-height: 100px;
 	background-image: url("../images/rack.png");
 
@@ -168,7 +171,7 @@ h1, p{
 	float: none;
     margin: 0 auto;
     margin-top: 200px;
-	/*visibility: hidden;*/
+	visibility: hidden;
 }
 .endText{
 	margin-top: 0px;
@@ -187,4 +190,27 @@ h1, p{
 
 	background-color: #00cc00;
 }
+.audioButton{
+	color: #BF0002;
+	width: 20px;
+}
+.close{
+	opacity: .5; 
+}
+.close:hover{
+	opacity: 1; 
+}
+.mainBox{
+	position: relative;
+
+}
+.playControlsLeft{
+	float: left;
+	margin-left: 10px;
+	margin-top: 10px;
+}
+#audioBox{
+	visibility: hidden;
+}
+
 
