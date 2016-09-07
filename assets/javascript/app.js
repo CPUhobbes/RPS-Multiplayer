@@ -70,7 +70,7 @@ $(document).ready(function(){
 });
 
 //Audio button image change and audio mute
-$(document).on("click", ".audioButton", function(){
+$(document).on("click", ".buttonPlayer", function(){
 	if(playAudio){
 		$(".audioButton").removeClass("fa-pause");
 		$(".audioButton").addClass("fa-play");
@@ -84,6 +84,7 @@ $(document).on("click", ".audioButton", function(){
 		mute(true);
 
 	}
+	
 });
 
 //Clear chat textbox on click
