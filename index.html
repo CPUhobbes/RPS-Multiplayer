@@ -2,8 +2,6 @@
 <html lang="en">
 	<head>
 		<title>RPS Multiplayer Game</title>
-
-
 		<meta charset="UTF-8"> 
 
 		 <!-- CSS -->
@@ -17,11 +15,10 @@
 
 	</head>
 
-
 	<body>
 		<div class="mainBox">
 			<div id="audioBox"><button type="button" class="close playControlsLeft" onclick="">
-				<i class="fa fa-play audioButton" aria-hidden="true"></i></button>
+				<i class="fa fa-pause audioButton" aria-hidden="true"></i></button>
 			</div>
 
 			<div class="container">
@@ -65,13 +62,13 @@
 					<div><input type="text" id="messageText"><button id="sendMessage">Taunt</button></div>
 				</div>
 				<div id="rightChar">
-					<img src="assets/images/characters/animation/empty.png" height="300" width=160" id="playerFighter2" alt="dummyIMG" class="noVertAlign">
+					<img src="assets/images/characters/animation/empty.png" height="300" width="160" id="playerFighter2" alt="dummyIMG" class="noVertAlign">
 					<div class="weaponHolder" id="weaponHolderPlayer2"></div>
 				</div>
 			</div>
 		</div>
 
-
+		<!-- Intro Modal -->
 		<div id="myModal" class="modal fade" role="dialog" data-backdrop="static">
 			<div class="modal-dialog">
 				<!-- Modal content-->
@@ -94,8 +91,6 @@
 							<img src="assets/images/characters/portraits/liu_kang.png" alt="LiuKang" id="liuKangPort" data-name="kang" class="fightersPortrait">
 							<img src="assets/images/characters/portraits/scorpion.png" alt="Scorpion" id="scorpionPort" data-name="scorpion" class="fightersPortrait">
 						</div>
-
-						
 					</div>
 					<div class="modal-footer">
 						<div class="text-center">
@@ -106,21 +101,16 @@
 			</div>
 		</div>
 				
-
-
 		<!-- Audio Players -->
     	<audio id="music_player" src="assets/audio/music/player_select.mp3" autoplay loop>
-
         	Your browser does not support the HTML5 Audio element.
     	</audio>
+
     	<audio id="characterSounds">
         	Your browser does not support the HTML5 Audio element.
     	</audio>
 
-
-
 		<!-- JavaScript -->
-
 		<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-app.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-database.js"></script>
@@ -130,14 +120,5 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 		<script src="https://use.fontawesome.com/4114828a53.js"></script>
 		<script src="assets/javascript/app.js"></script>
-
-
-
-
-
-
-
-
 	</body>
-
 </html>

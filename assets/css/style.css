@@ -4,17 +4,19 @@ body{
     font-family: 'Metal Mania', cursive;
 
 }
+
 h1, p{
 	font-family: 'Metal Mania', cursive;
 	color: #EFEF00;
 }
+
 button:focus {
 	outline:0;
 }
+
 .noVertAlign{
 	    vertical-align: top;
 }
-
 
 .mainBox{
 	background-image: url("../images/ts_bg.jpg");
@@ -33,7 +35,6 @@ button:focus {
     transform: scaleX(-1);
 }
 
-
 #leftChar {
     position: absolute;
     left: 80px;
@@ -48,6 +49,7 @@ button:focus {
     color: #EFEF00;
     font-size: 16px;
 }
+
 #chatArea{
 	position: absolute;
     left: 50%;
@@ -55,6 +57,7 @@ button:focus {
     margin-left: -200px;
 
 }
+
 #messageText{
 	width: 315px;
 	background-color: rgba(0,0,0,.6);
@@ -63,6 +66,7 @@ button:focus {
 	font-size: 18px;
 
 }
+
 #sendMessage{
 	width:75px;
 	background-color: rgba(0,0,0,.6);
@@ -70,9 +74,7 @@ button:focus {
 	font-size: 18px;
 }
 
-
 .nameBox{
-	
 	font-size: 48px;
 	background-color: #009B00;
 	width: 400px;
@@ -87,14 +89,10 @@ button:focus {
 	z-index: 1;
 	text-shadow: 2px 2px #000000;
 }
-
-
 #playerHealth1{
 	height: 100%;
 	width: 0%;
 	right:0;
-	
-
 }
 #playerHealth2{
 	height: 100%;
@@ -109,22 +107,26 @@ button:focus {
 	top:0;
     z-index: 0;
 }
+
 .floatRight{
 	float: right;
 }
+
 .floatLeft{
 	float: left;
 }
+
 .fightersPortrait{
 	width: 100px;
 	padding: 5px;
-
 }
+
 .dummyPortrait{
 	width: 100px;
 	padding: 5px;
 	
 }
+
 .fightersPortrait:hover{
 	background-color: #00cc00;
 }
@@ -133,17 +135,19 @@ button:focus {
 	background-color: #6B6B6D;
 
 }
+
 #modalButtonText{
 	font-size: 20px;
 }
+
 #playerNameTextbox{
 	font-size: 24px;
 	padding: 5px;
 	color: #EF0000;
 	text-align: center;
 	margin-bottom:10px; 
-
 }
+
 .weaponHolder{
 	display: inline-block;
 	visibility: hidden;
@@ -151,19 +155,20 @@ button:focus {
 	height:300px;
 	line-height: 100px;
 	background-image: url("../images/rack.png");
-
-
 }
+
 .weaponImage{
 
 	vertical-align: middle;
 }
+
 .score{
 	margin-top: -25px;
 	font-size: 32px;
 	color: #EFEF00;
 	text-shadow: 2px 2px #000000;
 }
+
 #fightBox{
 	width: 350px;
 	height: 125px;
@@ -173,12 +178,14 @@ button:focus {
     margin-top: 200px;
 	visibility: hidden;
 }
+
 .endText{
 	margin-top: 0px;
 	font-size: 32px;
 	color: #EF0000;
 	text-shadow: 2px 2px #000000;
 }
+
 .weaponText{
 	margin-top: 10px;
 	font-size: 40px;
@@ -190,25 +197,31 @@ button:focus {
 
 	background-color: #00cc00;
 }
+
 .audioButton{
 	color: #BF0002;
 	width: 20px;
 }
+
 .close{
 	opacity: .5; 
 }
+
 .close:hover{
 	opacity: 1; 
 }
+
 .mainBox{
 	position: relative;
 
 }
+
 .playControlsLeft{
 	float: left;
 	margin-left: 10px;
 	margin-top: 10px;
 }
+
 #audioBox{
 	visibility: hidden;
 }
